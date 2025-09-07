@@ -1,0 +1,20 @@
+.fullscreen {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url("https://img.freepik.com/free-vector/dark-wavy-background_23-2148388250.jpg") no-repeat center center/cover;
+  overflow: hidden; 
+}
+
+.fullscreen {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url("https://img.freepik.com/free-vector/dark-wavy-background_23-2148388250.jpg") no-repeat center center/cover;
+  overflow: hidden; 
+}
+

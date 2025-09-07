@@ -1,0 +1,195 @@
+/* พื้นฐาน */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fff;
+  color: #000;
+}
+.no-scroll { overflow: hidden; }
+
+/* Navbar */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* โลโก้ | เมนู | ขวา */
+  align-items: center;
+  gap: 12px;
+
+  background: #100139;
+  color: #fff;
+  padding: 12px 16px;
+}
+
+.logo {
+  font-size: 1.3rem;
+  font-weight: bold;
+  white-space: nowrap;
+  margin-right: 100px; 
+}
+
+/* เมนูหลัก: แสดงตลอด + เลื่อนแนวนอนได้บนจอเล็ก */
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.menu::-webkit-scrollbar { display: none; }
+
+.menu a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 8px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.menu a:hover,
+.menu a:active {
+  background: #829df920;
+  transform: scale(1.08); /* ขยายขึ้นเล็กน้อย */
+}
+
+/* ปุ่ม/ไอคอนขวา */
+.right-menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ปุ่ม hamburger = toggle dashboard */
+.hamburger {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 1100; /* ให้อยู่เหนือ overlay */
+}
+.hamburger span {
+  position: absolute;
+  left: 8px; right: 8px;
+  height: 2px;
+  background: #fff;
+  transition: transform .2s ease, opacity .2s ease, top .2s ease;
+}
+.hamburger span:nth-child(1){ top: 12px; }
+.hamburger span:nth-child(2){ top: 19px; }
+.hamburger span:nth-child(3){ top: 26px; }
+.hamburger.active span:nth-child(1){ top: 19px; transform: rotate(45deg); }
+.hamburger.active span:nth-child(2){ opacity: 0; }
+.hamburger.active span:nth-child(3){ top: 19px; transform: rotate(-45deg); }
+
+/* Overlay เมื่อเปิด dashboard */
+.dash-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: default;
+  z-index: 1050;
+}
+
+/* Side panel (Dashboard) */
+.dashboard {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(92vw, 360px);
+  background: #0e0a24;
+  color: #fff;
+  transform: translateX(100%);
+  transition: transform .22s ease-out;
+  box-shadow: -10px 0 24px rgba(0,0,0,.35);
+  z-index: 1101;
+  display: flex;
+  flex-direction: column;
+}
+.dashboard.open {
+  transform: translateX(0);
+}
+
+.dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #2a1c62;
+}
+.dash-header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.dash-close {
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.dash-links {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 8px;
+  gap: 4px;
+}
+.dash-links a {
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 10px;
+  border-radius: 8px;
+}
+.dash-links a:hover {
+  background: #ffffff1a;
+}
+/* ... ของเดิมคุณคงไว้ ... */
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.menu::-webkit-scrollbar { display: none; }
+
+/* ใช้กับ NavLink */
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 8px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: transform .15s ease, background .15s ease;
+}
+.nav-link:hover,
+.nav-link:active {
+  background: #829df920;
+  transform: scale(1.08);
+}
+
+/* แท็บที่ถูกเลือก (active) */
+.nav-link.active {
+  background: #ffffff;          /* พื้นขาวเหมือนปุ่มเลือกในภาพ */
+  color: #100139;               /* ตัวอักษรเข้มตัดพื้น */
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+  transform: none;              /* คงที่ ไม่เด้งตอนเป็น active */
+}
+
+/* เลย์เอาต์ยังเหมาะกับมือถือ: เมนูเลื่อน, ปุ่มสามขีดเปิดแดชบอร์ด */
+@media (max-width: 480px) {
+  .menu a { padding: 8px 8px; font-size: .9rem; }
+}

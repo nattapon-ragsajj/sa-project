@@ -1,0 +1,56 @@
+.card {
+  position: relative;        /* อยู่ด้านบนหิมะ */
+  z-index: 10;               /* สูงกว่า snowflake */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 40px;
+  max-height: 350px;
+  width: 300px;
+  background-color: rgba(156, 118, 243, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+
+.snowflake {
+  position: absolute;
+  top: -10px;
+  color: rgb(192, 197, 231);
+  pointer-events: none;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  0% { transform: translateY(0) }
+  100% { transform: translateY(100vh) }
+}
+
+.button-custom {
+  font-family: Arial, sans-serif;
+  font-size: 1.4rem;
+  width: 500px;
+  padding: 12px;
+  border-radius: 20px;
+  order: 2px solid rgb(224, 61, 61);
+  background-color: darkblue;
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.button-custom:hover {
+  background-color: black;
+  transform: scale(1.05);
+  border: 2px solid rgb(253, 254, 255);
+}
+
+/* จัดการพื้นหลังหลัก */
+.container {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #2c1981, #4facfe, #00f2fe); /* ไล่หลายเฉด */
+  min-height: 100vh;
+}

@@ -1,0 +1,118 @@
+/* พื้นหลังลายจุดเบา ๆ + โทนม่วงฟ้า */
+.produce-page{
+  min-height: 100vh;
+  padding: 16px 16px 80px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0,0,0,.04) 2px, transparent 2px) 0 0/18px 18px,
+    linear-gradient(180deg, #f7f7fb 0%, #eef1ff 100%);
+  color:#1b1440;
+  box-sizing: border-box;
+  font-family: system-ui, Arial, sans-serif;
+}
+
+/* หัวข้อ + ปุ่มย้อนกลับ */
+.produce-header{
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:14px;
+}
+.produce-header h1{
+  font-size:1.05rem; font-weight:700; margin:0; color:#3c2cdd;
+}
+.back-btn{
+  border: none; background: transparent; cursor: pointer;
+  font-size:1rem; line-height:1; color:#3c2cdd;
+  border-radius: 999px; padding:6px 8px;
+  transition: transform .12s ease, background .12s ease;
+}
+.back-btn:hover{ background:#3c2cdd15; transform: scale(1.05); }
+.back-btn:active{ transform: scale(.95); }
+
+/* ลิสต์การ์ด */
+.cards{ display: grid; gap: 14px; }
+
+/* การ์ดสินค้า */
+.prod-card{
+  display:grid;
+  grid-template-columns: 86px 1fr auto;
+  align-items: center;
+  gap:14px;
+
+  background: linear-gradient(90deg,#b7b2ff 0%, #9aa5ff 60%, #6e6bff 100%);
+  padding:14px;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(71, 61, 255, .18);
+}
+
+/* รูป/placeholder */
+.prod-thumb{
+  width:86px; height:86px; border-radius:16px;
+  background: #e9e8ff;
+  box-shadow: inset 0 0 0 2px #ffffff70;
+}
+
+/* กลาง: ชื่อสินค้า / สถานะ */
+.prod-info{ display:flex; flex-direction: column; gap:10px; }
+.row{ display:flex; align-items:center; gap:8px; flex-wrap: wrap; }
+.label{ color:#231a86; font-weight:600; white-space: nowrap; }
+.pill{
+  display:inline-block;
+  padding:6px 10px; border-radius:10px;
+  background:#eee9ff; color:#3a2ddc; font-weight:600; font-size:.9rem;
+  transition: transform .15s ease, background .15s ease;
+}
+.pill:hover{ transform: scale(1.06); background:#f5f2ff; }
+.pill:active{ transform: scale(.96); }
+
+/* แผงปุ่มขวามือ */
+.prod-actions{
+  background:#2413b6;
+  padding:10px;
+  border-radius: 16px;
+  display:flex; flex-direction: column; gap:10px;
+  box-shadow: inset 0 0 0 2px #2f1fe3, 0 6px 20px rgba(0,0,0,.12);
+}
+
+.btn{
+  border:none; cursor:pointer; border-radius:12px;
+  padding:10px 14px; font-weight:700; font-size:.95rem;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease;
+}
+.btn.primary{
+  background: #ffffff; color:#2413b6;
+  box-shadow: 0 4px 10px rgba(255,255,255,.25);
+}
+.btn.primary:hover{ transform: scale(1.06); }
+.btn.primary:active{ transform: scale(.95); }
+
+.btn.ghost{
+  background: #4a3ce8; color:#fff;
+}
+.btn.ghost:hover{ transform: scale(1.06); background:#5a4df0; }
+.btn.ghost:active{ transform: scale(.95); }
+
+/* ปุ่มเพิ่มด้านล่าง */
+.add-wrap{ margin-top:18px; display:flex; justify-content:center; }
+.add-btn{
+  width: min(520px, 92%);
+  padding:14px 16px; border-radius: 14px;
+  border:none; cursor:pointer;
+  background:#e7e7ee; color:#4c4c65; font-weight:700;
+  box-shadow: 0 6px 18px rgba(0,0,0,.08), inset 0 0 0 2px #ffffff70;
+  transition: transform .12s ease, background .12s ease;
+}
+.add-btn:hover{ transform: scale(1.03); background:#efeff6; }
+.add-btn:active{ transform: scale(.97); }
+
+/* ตอบสนองหน้าจอเล็ก */
+@media (max-width: 520px){
+  .prod-card{
+    grid-template-columns: 70px 1fr;
+    grid-template-areas:
+      "thumb actions"
+      "thumb info";
+    gap:10px;
+  }
+  .prod-thumb{ width:70px; height:70px; grid-area: thumb; }
+  .prod-actions{ grid-area: actions; flex-direction: row; }
+  .prod-info{ grid-area: info; }
+}
