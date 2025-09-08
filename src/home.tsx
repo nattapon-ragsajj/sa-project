@@ -33,7 +33,7 @@ function Home() {
           <NavLink to="product-produce" className="nav-link">ผลิตสินค้า</NavLink>
           <NavLink to="raw-material"    className="nav-link">คลังวัตถุดิบ</NavLink>
           <NavLink to="warehouse"       className="nav-link">คลังสินค้า</NavLink>
-          <NavLink to="material-history"className="nav-link">ประวัติการใช้วัตถุดิบ</NavLink>
+          <NavLink to="q-control"     className="nav-link">คุณภาพสินค้า</NavLink>
           <NavLink to="sales-list"      className="nav-link">รายการขายสินค้า</NavLink>
         </nav>
 
@@ -41,7 +41,7 @@ function Home() {
         <div className="right-menu">
           <span className="bell" aria-hidden="true">🔔</span>
 
-          {/* ปุ่มสามขีด = เปิด Dashboard */}
+          {/* ปุ่มสามขีด = เปิด Dashboard 
           <button
             type="button"
             className={`hamburger ${dashOpen ? "active" : ""}`}
@@ -50,7 +50,7 @@ function Home() {
             onClick={() => setDashOpen((v) => !v)}
           >
             <span></span><span></span><span></span>
-          </button>
+          </button>*/}
         </div>
       </header>
 
