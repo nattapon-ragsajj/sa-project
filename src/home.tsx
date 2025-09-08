@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import "./Home.css";
+import "./home.css";
+import "./picture.css";
+
 
 function Home() {
   const [dashOpen, setDashOpen] = useState(false);
@@ -23,6 +25,7 @@ function Home() {
 
   return (
     <div className="layout">
+      <div className="fullscreenHome"></div>
       {/* Navbar */}
       <header className="navbar">
         <div className="logo">Manufacturing System</div>

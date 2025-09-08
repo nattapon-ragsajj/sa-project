@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import "./productProduce.css";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductProduce() {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const [quantity, setQuantity] = useState("");
@@ -21,14 +23,19 @@ export default function ProductProduce() {
   };
 
   const handleConfirm = () => {
-    // TODO: เรียก API สร้างคำสั่งผลิตที่นี่
+    // ตรวจจำนวนก่อน
     if (!quantity || isNaN(quantity) || Number(quantity) <= 0) {
       setError("กรุณากรอกจำนวนที่ถูกต้อง");
       return;
     }
-    console.log("ยืนยันผลิต:", selected, "จำนวน:", quantity);
-    setOpen(false);
+    // ไปหน้า "ระบุรายการวัตถุดิบ" พร้อมส่งข้อมูลไปด้วย
+    navigate("/home/material-select", {
+      state: { product: selected, quantity: Number(quantity) },
+    });
+    // ไม่ต้อง setOpen(false); ก็ได้ เพราะเปลี่ยนหน้าแล้ว state จะหายเอง
   };
+
+  const qtyValid = quantity && !isNaN(quantity) && Number(quantity) > 0;
 
   return (
     <div className="produce-page">
@@ -43,6 +50,7 @@ export default function ProductProduce() {
         {items.map((it) => (
           <article key={it.id} className="prod-card">
             <div className="prod-thumb" aria-label="product image placeholder" />
+
             <div className="prod-info">
               <div className="row">
                 <span className="label">ชื่อสินค้า : </span>
@@ -71,31 +79,38 @@ export default function ProductProduce() {
       {/* ปุ่มเพิ่มด้านล่าง */}
       <div className="add-wrap">
         <button className="add-btn">+ เพิ่มสินค้าที่ต้องการผลิต</button>
-        
       </div>
 
       {/* Modal */}
       <Modal open={open} onClose={() => setOpen(false)}>
-        <h3 className="modal-title">ยืนยันการสั่งผลิต</h3>
+        <h3 id="modal-title" className="modal-title">ยืนยันการสั่งผลิต</h3>
         <p className="modal-sub">
           ต้องการผลิต <strong>{selected?.name}</strong> หรือไม่?
         </p>
 
-        <label className="modal-label">
+        <label className="modal-label" htmlFor="qty-input">
           จำนวนที่ต้องการผลิต:
-          <input
-            type="number"
-            min="1"
-            className="modal-input"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-          />
         </label>
+        <input
+          id="qty-input"
+          type="number"
+          min="1"
+          className="modal-input"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+        />
         {error && <div className="modal-error">{error}</div>}
 
         <div className="modal-actions">
           <button className="btn ghost" onClick={() => setOpen(false)}>ยกเลิก</button>
-          <button className="btn primary" onClick={handleConfirm}>ยืนยัน</button>
+          <button
+            className="btn primary"
+            onClick={handleConfirm}
+            disabled={!qtyValid}
+            style={{ opacity: qtyValid ? 1 : 0.6, cursor: qtyValid ? "pointer" : "not-allowed" }}
+          >
+            ยืนยัน
+          </button>
         </div>
       </Modal>
     </div>
@@ -114,10 +129,10 @@ function Modal({ open, onClose, children }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  // โฟกัสปุ่มแรกเมื่อเปิด
+  // โฟกัสอัตโนมัติ
   useEffect(() => {
     if (open && dialogRef.current) {
-      const focusable = dialogRef.current.querySelector("button, [href], input, select, textarea");
+      const focusable = dialogRef.current.querySelector("input, button, [href], select, textarea");
       focusable?.focus();
     }
   }, [open]);

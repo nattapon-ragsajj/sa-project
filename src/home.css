@@ -1,3 +1,19 @@
+.layout {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.fullscreenHome {
+  position: absolute;
+  inset: 0;
+  background: url("https://t4.ftcdn.net/jpg/04/87/77/31/360_F_487773107_3Ofdhf3Pu0KRQOLYYeR9bvurcDKshD7V.jpg") no-repeat center center;
+  background-size: cover;
+  filter: brightness(1);
+  z-index: -1;
+}
+
+
 /* พื้นฐาน */
 body {
   margin: 0;
@@ -43,7 +59,7 @@ body {
 .menu::-webkit-scrollbar { display: none; }
 
 .menu a {
-  color: #fff;
+  color: #ffffff;
   text-decoration: none;
   font-size: 0.95rem;
   padding: 8px 10px;

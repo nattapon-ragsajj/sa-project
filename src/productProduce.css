@@ -65,11 +65,11 @@
 
 /* แผงปุ่มขวามือ */
 .prod-actions{
-  background:#2413b6;
+  background:#5243d9;
   padding:10px;
   border-radius: 16px;
   display:flex; flex-direction: column; gap:10px;
-  box-shadow: inset 0 0 0 2px #2f1fe3, 0 6px 20px rgba(0,0,0,.12);
+  box-shadow: inset 0 0 0 2px #110693, 0 6px 20px rgba(237, 222, 255, 0.12);
 }
 
 .btn{
@@ -77,17 +77,18 @@
   padding:10px 14px; font-weight:700; font-size:.95rem;
   transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease;
 }
-.btn.primary{
-  background: #ffffff; color:#2413b6;
-  box-shadow: 0 4px 10px rgba(255,255,255,.25);
+.btn.primary {
+  background: #7b70db;
+  color: #e3d3f8;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
-.btn.primary:hover{ transform: scale(1.06); }
-.btn.primary:active{ transform: scale(.95); }
+.btn.primary:hover { transform: scale(1.06); background:#090254; }
+.btn.primary:active { transform: scale(.95); }
 
 .btn.ghost{
-  background: #4a3ce8; color:#fff;
+  background: #090444; color:#fff;
 }
-.btn.ghost:hover{ transform: scale(1.06); background:#5a4df0; }
+.btn.ghost:hover{ transform: scale(1.06); background:#c7e5fd; }
 .btn.ghost:active{ transform: scale(.95); }
 
 /* ปุ่มเพิ่มด้านล่าง */
@@ -184,19 +185,20 @@
 
 .modal-label {
   display: block;
-  width: 450px;
+  width: 500px;
   font-weight: 600;
   margin: 10px 0 6px;
   color: #2b2b66;
 }
 
 .modal-input {
-  width: 100%;
+  width: 80%;
   padding: 8px 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 0.95rem;
   margin-top: 4px;
+  margin-bottom: 10px;
 }
 
 .modal-input:focus {

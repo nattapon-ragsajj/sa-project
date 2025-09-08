@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./loginPage";
 import Home from "./home";
 import ProductProduce from "./productProduce";
+import MaterialSelect from "./materialSelect";
 
 // เพื่อน ๆ เมนูอื่น (ทำหน้าเปล่าไว้ก่อน)
 const RawMaterial = () => <div style={{padding:16}}>คลังวัตถุดิบ</div>;
@@ -20,6 +21,7 @@ function App() {
         <Route path="/home" element={<Home />}>
           <Route index element={<Welcome />} />
           <Route path="product-produce" element={<ProductProduce />} />
+          {/*<Route path="material-select" element={<MaterialSelect />} />*/}
           <Route path="raw-material"    element={<RawMaterial />} />
           <Route path="warehouse"       element={<Warehouse />} />
           <Route path="q-control"       element={<MatHistory />} />
