@@ -1,129 +1,143 @@
-import { useEffect, useState } from "react";
-import { NavLink, Outlet,useNavigate } from "react-router-dom";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import "./home.css";
-import "./picture.css";
 
-
-function Home() {
+export default function Home() {
   const [storeOpen, setStoreOpen] = useState(false);
-  const [dashOpen, setDashOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
   const navigate = useNavigate();
-
-  // ปิดแผงเมื่อกด ESC
-  useEffect(() => {
-    const onKey = (e: { key: string; }) => {
-      if (e.key === "Escape") 
-        setDashOpen(false);
-        setStoreOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  // กันเลื่อนหน้าหลักตอนเปิด dashboard
-  useEffect(() => {
-    if (dashOpen) document.body.classList.add("no-scroll");
-    else document.body.classList.remove("no-scroll");
-    return () => document.body.classList.remove("no-scroll");
-  }, [dashOpen]);
 
   return (
     <div className="layout">
-      <div className="fullscreenHome"></div>
-      {/* Navbar */}
+      <div className="fullscreenHome" />
+
       <header className="navbar">
         <div className="logo">Manufacturing System</div>
 
-        {/* เมนูหลัก: แสดงตลอด */}
         <nav className="menu">
-          {/* ใช้ NavLink เพื่อ active state และ “อยู่บนแพลตฟอร์มของ Home” ด้วย path แบบ relative */}
           <NavLink to="product-produce" className="nav-link">ผลิตสินค้า</NavLink>
-          {/*<NavLink to="raw-material"    className="nav-link">คลังวัตถุดิบ</NavLink>*/}
-          {/*<NavLink to="warehouse"       className="nav-link">คลังสินค้า</NavLink>*/}
-          {/* ===== ดรอปดาวน์: คลัง ===== */}
-          <div
-            className={`menu-item ${storeOpen ? "open" : ""}`}
-            onMouseEnter={() => setStoreOpen(true)}
-            onMouseLeave={() => setStoreOpen(false)}
-          >
-            <button
-              type="button"
-              className="nav-link has-caret"
-              aria-haspopup="true"
-              aria-expanded={storeOpen}
-              onClick={() => setStoreOpen(v => !v)} // รองรับคลิก/มือถือ
-            >
-              คลัง ▾
-            </button>
 
-            <div className="dropdown" role="menu">
-              <button className="dropdown-link" onClick={() => navigate("warehouse")}>
-                คลังสินค้า
-              </button>
-              <button className="dropdown-link" onClick={() => navigate("raw-material")}>
-                คลังวัตถุดิบ
-              </button>
-            </div>
+          {/* ===== ปุ่ม "คลัง" + PortalDropdown ===== */}
+          <div className="menu-item">
+            <button
+              ref={triggerRef}
+              type="button"
+              className={`nav-link has-caret ${storeOpen ? "active" : ""}`}
+              aria-haspopup="menu"
+              aria-expanded={storeOpen}
+              onClick={() => setStoreOpen(v => !v)}
+            >
+              คลัง
+            </button>
           </div>
-          {/* ===== จบดรอปดาวน์ ===== */}
 
           <NavLink to="production-order" className="nav-link">รายการสั่งซื้อสินค้า</NavLink>
-          <NavLink to="q-control"     className="nav-link">ควบคุมคุณภาพสินค้า</NavLink>
-          <NavLink to="sales-list"      className="nav-link">รายการขายสินค้า</NavLink>
-          {/*<NavLink to="product-produce" className="nav-link">ผลิตสินค้า</NavLink>*/}
-
+          <NavLink to="q-control" className="nav-link">ควบคุมคุณภาพสินค้า</NavLink>
+          <NavLink to="sales-list" className="nav-link">รายการขายสินค้า</NavLink>
         </nav>
 
-        {/* ปุ่มด้านขวา */}
         <div className="right-menu">
           <span className="bell" aria-hidden="true">🔔</span>
-
-          {/* ปุ่มสามขีด = เปิด Dashboard 
-          <button
-            type="button"
-            className={`hamburger ${dashOpen ? "active" : ""}`}
-            aria-label="Toggle dashboard"
-            aria-expanded={dashOpen}
-            onClick={() => setDashOpen((v) => !v)}
-          >
-            <span></span><span></span><span></span>
-          </button>*/}
         </div>
       </header>
 
-      {/* ที่วางหน้าลูก (จะอยู่ใต้ Navbar ตลอด) */}
       <main className="content-shell">
         <Outlet />
       </main>
 
-      {/* Overlay */}
-      {dashOpen && (
-        <button
-          className="dash-overlay"
-          aria-label="Close dashboard"
-          onClick={() => setDashOpen(false)}
-        />
-      )}
-
-      {/* Dashboard Side Panel */}
-      <aside className={`dashboard ${dashOpen ? "open" : ""}`} aria-hidden={!dashOpen}>
-        <div className="dash-header">
-          <h3>Dashboard</h3>
-          <button className="dash-close" onClick={() => setDashOpen(false)} aria-label="Close">
-            ×
-          </button>
-        </div>
-
-        <nav className="dash-links">
-          <a href="#">รายการคำสั่งซื้อสินค้า (Production Order)</a>
-          <a href="#">รายการสินค้า (Inventory)</a>
-          <a href="#">คุณภาพสินค้า (Quality Control)</a>
-          <a href="#">รายงาน (Reports)</a>
-          <a href="#">ตั้งค่า (Setting)</a>
-        </nav>
-      </aside>
+      {/* กล่องดรอปดาวน์แบบ Portal (ลอยบนสุด ตำแหน่งตามปุ่ม) */}
+      <PortalDropdown
+        open={storeOpen}
+        onClose={() => setStoreOpen(false)}
+        anchorRef={triggerRef}
+      >
+        <button className="dropdown-link" onClick={() => { setStoreOpen(false); navigate("warehouse"); }}>
+          คลังสินค้า
+        </button>
+        <button className="dropdown-link" onClick={() => { setStoreOpen(false); navigate("raw-material"); }}>
+          คลังวัตถุดิบ
+        </button>
+      </PortalDropdown>
     </div>
   );
 }
 
-export default Home;
+/* ===== Component: PortalDropdown ===== */
+function PortalDropdown({
+  open,
+  onClose,
+  anchorRef,
+  children,
+}: {
+  open: boolean;
+  onClose: () => void;
+  anchorRef: React.RefObject<HTMLElement>;
+  children: React.ReactNode;
+}) {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{top: number; left: number; width: number}>({top: 0, left: 0, width: 0});
+
+  // คำนวณพิกัดใต้ปุ่ม
+  const place = () => {
+    const el = anchorRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    setPos({
+      top: r.bottom + window.scrollY + 8,       // 8px ระยะห่าง
+      left: r.left + window.scrollX,
+      width: r.width,
+    });
+  };
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    place();
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onWin = () => place();
+    const onDown = (e: MouseEvent) => {
+      // ปิดเมื่อคลิกนอก
+      if (boxRef.current && !boxRef.current.contains(e.target as Node) &&
+          anchorRef.current && !anchorRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+    window.addEventListener("scroll", onWin, true);
+    window.addEventListener("resize", onWin);
+    document.addEventListener("mousedown", onDown);
+    return () => {
+      window.removeEventListener("scroll", onWin, true);
+      window.removeEventListener("resize", onWin);
+      document.removeEventListener("mousedown", onDown);
+    };
+  }, [open]);
+
+  if (!open) return null;
+
+  // กล่องจริงถูกวางบน body (ไม่โดนตัด)
+  return createPortal(
+    <div
+      ref={boxRef}
+      role="menu"
+      style={{
+        position: "absolute",
+        top: pos.top,
+        left: pos.left,
+        minWidth: Math.max(220, pos.width),
+        background: "#2f2f2f",
+        color: "#fff",
+        borderRadius: 10,
+        padding: 8,
+        boxShadow: "0 12px 24px rgba(0,0,0,.28)",
+        zIndex: 99999,  // สูงพอแน่นอน
+      }}
+    >
+      {children}
+    </div>,
+    document.body
+  );
+}
