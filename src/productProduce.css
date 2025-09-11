@@ -97,11 +97,11 @@
   width: min(520px, 92%);
   padding:14px 16px; border-radius: 14px;
   border:none; cursor:pointer;
-  background:#d8d8da; color:#14143f; font-weight:700;
-  box-shadow: 0 6px 18px rgba(0,0,0,.08), inset 0 0 0 2px #ffffff70;
+  background:#fbfbfb; color:#020241; font-weight:700;
+  box-shadow: 0 6px 18px rgba(0,0,0,.08), inset 0 0 0 2px #69686870;
   transition: transform .12s ease, background .12s ease;
 }
-.add-btn:hover{ transform: scale(1.03); background:#efeff6; }
+.add-btn:hover{ transform: scale(1.03);color:#eeecec; background: #020202; border: 2px solid white;}
 .add-btn:active{ transform: scale(.97); }
 
 /* ตอบสนองหน้าจอเล็ก */

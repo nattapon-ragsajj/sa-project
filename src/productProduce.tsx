@@ -78,7 +78,8 @@ export default function ProductProduce() {
 
       {/* ปุ่มเพิ่มด้านล่าง */}
       <div className="add-wrap">
-        <button className="add-btn">+ เพิ่มสินค้าที่ต้องการผลิต</button>
+        <button className="add-btn" onClick={() => navigate("/home/build-product")}>
+          + เพิ่มสินค้าที่ต้องการผลิต</button>
       </div>
 
       {/* Modal */}
