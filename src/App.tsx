@@ -1,12 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./loginPage";
 import Home from "./home";
-import ProductProduce from "./productProduce";
+import ProductPage from "./productPage";
 import MaterialSelect from "./materialSelect";
 import BuildProduct from "./buildProduct";
+import RawMaterial from "./rawMaterial";
+import Product from "./product";
 
 // เพื่อน ๆ เมนูอื่น (ทำหน้าเปล่าไว้ก่อน)
-const RawMaterial = () => <div style={{padding:16}}>คลังวัตถุดิบ</div>;
+/*const RawMaterial = () => <div style={{padding:16}}>คลังวัตถุดิบ</div>;*/
 const Warehouse    = () => <div style={{padding:16}}>คลังสินค้า</div>;
 const Qcontrol   = () => <div style={{padding:16}}>คุณภาพสินค้า</div>;
 const ProductionOrder = () => <div style={{padding:16}}>รายการคำสั่งซื้อสินค้า</div>;
@@ -22,7 +24,8 @@ function App() {
         {/* Home = แพลตฟอร์มหลัก (Navbar อยู่ตลอด) */}
         <Route path="/home" element={<Home />}>
           <Route index element={<Welcome />} />
-          <Route path="product-produce" element={<ProductProduce />} />
+          <Route path="product"    element={<Product/>}/>
+          <Route path="product-page" element={<ProductPage />} />
           {<Route path="material-select" element={<MaterialSelect />} />}
           <Route path="raw-material"    element={<RawMaterial />} />
           <Route path="warehouse"       element={<Warehouse />} />

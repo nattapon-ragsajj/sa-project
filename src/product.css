@@ -11,27 +11,27 @@
 }
 
 /* หัวข้อ + ปุ่มย้อนกลับ */
-.produce-header{
+.produce-page .produce-header{
   display:flex; align-items:center; gap:10px;
   margin-bottom:14px;
 }
-.produce-header h1{
+.produce-page .produce-header h1{
   font-size:1.05rem; font-weight:700; margin:0; color:#3c2cdd;
 }
-.back-btn{
+.produce-page .back-btn{
   border: none; background: transparent; cursor: pointer;
   font-size:1rem; line-height:1; color:#3c2cdd;
   border-radius: 999px; padding:6px 8px;
   transition: transform .12s ease, background .12s ease;
 }
-.back-btn:hover{ background:#3c2cdd15; transform: scale(1.05); }
-.back-btn:active{ transform: scale(.95); }
+.produce-page .back-btn:hover{ background:#3c2cdd15; transform: scale(1.05); }
+.produce-page .back-btn:active{ transform: scale(.95); }
 
 /* ลิสต์การ์ด */
-.cards{ display: grid; gap: 14px; }
+.produce-page .cards{ display: grid; gap: 14px; }
 
 /* การ์ดสินค้า */
-.prod-card{
+.produce-page .prod-card{
   display:grid;
   grid-template-columns: 86px 1fr auto;
   align-items: center;
@@ -44,27 +44,27 @@
 }
 
 /* รูป/placeholder */
-.prod-thumb{
+.produce-page .prod-thumb{
   width:86px; height:86px; border-radius:16px;
   background: #e9e8ff;
   box-shadow: inset 0 0 0 2px #00000070;
 }
 
 /* กลาง: ชื่อสินค้า / สถานะ */
-.prod-info{ display:flex; flex-direction: column; gap:10px; }
-.row{ display:flex; align-items:center; gap:8px; flex-wrap: wrap; }
-.label{ color:#231a86; font-weight:600; white-space: nowrap; }
-.pill{
+.produce-page .prod-info{ display:flex; flex-direction: column; gap:10px; }
+.produce-page .row{ display:flex; align-items:center; gap:8px; flex-wrap: wrap; }
+.produce-page .label{ color:#231a86; font-weight:600; white-space: nowrap; }
+.produce-page .pill{
   display:inline-block;
   padding:6px 10px; border-radius:10px;
   background:#eee9ff; color:#3a2ddc; font-weight:600; font-size:.9rem;
   transition: transform .15s ease, background .15s ease;
 }
-.pill:hover{ transform: scale(1.06); background:#f5f2ff; }
-.pill:active{ transform: scale(.96); }
+.produce-page .pill:hover{ transform: scale(1.06); background:#f5f2ff; }
+.produce-page .pill:active{ transform: scale(.96); }
 
 /* แผงปุ่มขวามือ */
-.prod-actions{
+.produce-page .prod-actions{
   background:#5243d9;
   padding:10px;
   border-radius: 16px;
@@ -72,54 +72,55 @@
   box-shadow: inset 0 0 0 2px #110693, 0 6px 20px rgba(237, 222, 255, 0.12);
 }
 
-.btn{
+/* ปุ่มทั่วไป */
+.produce-page .btn{
   border:none; cursor:pointer; border-radius:12px;
   padding:10px 14px; font-weight:700; font-size:.95rem;
   transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease;
 }
-.btn.primary {
+.produce-page .btn.primary {
   background: #7b70db;
   color: #e3d3f8;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
-.btn.primary:hover { transform: scale(1.06); background:#090254; }
-.btn.primary:active { transform: scale(.95); }
+.produce-page .btn.primary:hover { transform: scale(1.06); background:#090254; }
+.produce-page .btn.primary:active { transform: scale(.95); }
 
-.btn.ghost{
+.produce-page .btn.ghost{
   background: #090444; color:#fff;
 }
-.btn.ghost:hover{ transform: scale(1.06); background:#c7e5fd; }
-.btn.ghost:active{ transform: scale(.95); }
+.produce-page .btn.ghost:hover{ transform: scale(1.06); background:#c7e5fd; }
+.produce-page .btn.ghost:active{ transform: scale(.95); }
 
 /* ปุ่มเพิ่มด้านล่าง */
-.add-wrap{ margin-top:18px; display:flex; justify-content:center; }
-.add-btn{
-  width: min(520px, 92%);
+.produce-page .add-wrap{ margin-top:18px; display:flex; justify-content:right;margin-bottom: 18px; }
+.produce-page .add-btn{
+  width: min(250px, 92%);
   padding:14px 16px; border-radius: 14px;
   border:none; cursor:pointer;
   background:#fbfbfb; color:#020241; font-weight:700;
   box-shadow: 0 6px 18px rgba(0,0,0,.08), inset 0 0 0 2px #69686870;
   transition: transform .12s ease, background .12s ease;
 }
-.add-btn:hover{ transform: scale(1.03);color:#eeecec; background: #020202; border: 2px solid white;}
-.add-btn:active{ transform: scale(.97); }
+.produce-page .add-btn:hover{ transform: scale(1.03);color:#eeecec; background: #020202; border: 2px solid white;}
+.produce-page .add-btn:active{ transform: scale(.97); }
 
 /* ตอบสนองหน้าจอเล็ก */
 @media (max-width: 520px){
-  .prod-card{
+  .produce-page .prod-card{
     grid-template-columns: 70px 1fr;
     grid-template-areas:
       "thumb actions"
       "thumb info";
     gap:10px;
   }
-  .prod-thumb{ width:70px; height:70px; grid-area: thumb; }
-  .prod-actions{ grid-area: actions; flex-direction: row; }
-  .prod-info{ grid-area: info; }
+  .produce-page .prod-thumb{ width:70px; height:70px; grid-area: thumb; }
+  .produce-page .prod-actions{ grid-area: actions; flex-direction: row; }
+  .produce-page .prod-info{ grid-area: info; }
 }
 
 /* ==== Modal / Pop-up ==== */
-.modal-overlay{
+.produce-page .modal-overlay{
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,.45);
@@ -135,55 +136,54 @@
   to   { transform: translateY(0) scale(1);     opacity: 1; }
 }
 
-.modal{
+.produce-page .modal{
   position: fixed;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: min(520px, 92vw); /* ขนาดกล่องpop up ในการยืนยัน*/
+  width: min(520px, 92vw);
   background: #fff;
   color: #2b2b66;
   border-radius: 16px;
-  box-shadow: 0 18px 16px rgba(0,0,0,.25); /*เงาของกล่อง pop up*/
+  box-shadow: 0 18px 16px rgba(0,0,0,.25);
   padding: 18px 16px;
   z-index: 2001;
   animation: modalIn .18s ease-out;
 }
 
-.modal-title{
+.produce-page .modal-title{
   margin: 0 0 6px;
   font-size: 1.1rem;
   color: #2413b6;
 }
-.modal-sub{
+.produce-page .modal-sub{
   margin: 0 0 14px;
   line-height: 1.5;
 }
 
-.modal-actions{
+.produce-page .modal-actions{
   display: flex;
   justify-content: flex-end;
   gap: 10px;
 }
 
-/* ใช้สไตล์ปุ่มเดิม */
-.modal .btn{
+/* ปุ่มใน Modal */
+.produce-page .modal .btn{
   border:none; cursor:pointer; border-radius:12px;
   padding:10px 14px; font-weight:700; font-size:.95rem;
   transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease;
 }
-.modal .btn.primary{
+.produce-page .modal .btn.primary{
   background: #2413b6; color:#fff;
 }
-.modal .btn.primary:hover{ transform: scale(1.06); }
-.modal .btn.primary:active{ transform: scale(.95); }
-.modal .btn.ghost{
+.produce-page .modal .btn.primary:hover{ transform: scale(1.06); }
+.produce-page .modal .btn.primary:active{ transform: scale(.95); }
+.produce-page .modal .btn.ghost{
   background: #e9e9f3; color:#2b2b66;
 }
-.modal .btn.ghost:hover{ transform: scale(1.06); background:#f1f1f8; }
-.modal .btn.ghost:active{ transform: scale(.95); }
+.produce-page .modal .btn.ghost:hover{ transform: scale(1.06); background:#f1f1f8; }
+.produce-page .modal .btn.ghost:active{ transform: scale(.95); }
 
-
-.modal-label {
+.produce-page .modal-label {
   display: block;
   width: 500px;
   font-weight: 600;
@@ -191,7 +191,7 @@
   color: #2b2b66;
 }
 
-.modal-input {
+.produce-page .modal-input {
   width: 80%;
   padding: 8px 10px;
   border: 1px solid #ccc;
@@ -200,16 +200,14 @@
   margin-top: 4px;
   margin-bottom: 10px;
 }
-
-.modal-input:focus {
+.produce-page .modal-input:focus {
   outline: none;
   border-color: #2413b6;
   box-shadow: 0 0 0 2px #2413b620;
 }
 
-.modal-error {
+.produce-page .modal-error {
   color: #d32f2f;
   font-size: 0.85rem;
   margin: 6px 0;
 }
-

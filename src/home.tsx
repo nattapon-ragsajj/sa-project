@@ -17,7 +17,9 @@ export default function Home() {
         <div className="logo">Manufacturing System</div>
 
         <nav className="menu">
-          <NavLink to="product-produce" className="nav-link">ผลิตสินค้า</NavLink>
+          <NavLink to="product-page" className="nav-link">สินค้า</NavLink>
+          <NavLink to="product" className="nav-link">ผลิตสินค้า</NavLink>
+
 
           {/* ===== ปุ่ม "คลัง" + PortalDropdown ===== */}
           <div className="menu-item">

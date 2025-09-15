@@ -1,21 +1,28 @@
 import { useEffect, useRef, useState } from "react";
-import "./productProduce.css";
+import "./product.css";
 import { useNavigate } from "react-router-dom";
+
+interface Item {
+  id: number;
+  no: string;
+  status: string;
+  date: string;
+}
 
 export default function ProductProduce() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(null);
-  const [quantity, setQuantity] = useState("");
-  const [error, setError] = useState("");
+  const [selected, setSelected] = useState<Item | null>(null);
+  const [quantity, setQuantity] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   // ข้อมูลตัวอย่าง
-  const [items] = useState([
-    { id: 1, name: "ชาเขียวมัทฉะ 500ml", status: "update" },
-    { id: 2, name: "คุกกี้ช็อกชิพ", status: "update" },
+  const [items] = useState<Item[]>([
+    { id: 1, no: "ID : NO.1", status: "กำลังแพ็ค", date: "01/18/2568 15:34:02" },
+    { id: 2, no: "ID : NO.2", status: "กำลังประกอบอาหาร", date: "01/18/2568 15:34:02" },
   ]);
 
-  const handleCreateProductClick = (item) => {
+  const handleCreateProductClick = (item: Item) => {
     setSelected(item);
     setQuantity("");
     setError("");
@@ -23,27 +30,31 @@ export default function ProductProduce() {
   };
 
   const handleConfirm = () => {
-    // ตรวจจำนวนก่อน
-    if (!quantity || isNaN(quantity) || Number(quantity) <= 0) {
+    if (!quantity || isNaN(Number(quantity)) || Number(quantity) <= 0) {
       setError("กรุณากรอกจำนวนที่ถูกต้อง");
       return;
     }
-    // ไปหน้า "ระบุรายการวัตถุดิบ" พร้อมส่งข้อมูลไปด้วย
     navigate("/home/material-select", {
       state: { product: selected, quantity: Number(quantity) },
     });
-    // ไม่ต้อง setOpen(false); ก็ได้ เพราะเปลี่ยนหน้าแล้ว state จะหายเอง
   };
 
-  const qtyValid = quantity && !isNaN(quantity) && Number(quantity) > 0;
+  const qtyValid = quantity !== "" && !isNaN(Number(quantity)) && Number(quantity) > 0;
 
   return (
     <div className="produce-page">
       {/* แถบหัวข้อ */}
       <header className="produce-header">
-        <button className="back-btn" aria-label="ย้อนกลับ">←</button>
+        <button className="back-btn" aria-label="ย้อนกลับ" onClick={() => navigate(-1)}>←</button>
         <h1>ผลิตสินค้า</h1>
       </header>
+
+      {/* ปุ่มเพิ่มด้านล่าง */}
+      <div className="add-wrap">
+        <button className="add-btn" onClick={() => navigate("/home/product")}>
+          + สร้างคำสั่งผลิต
+        </button>
+      </div>
 
       {/* รายการการ์ดสินค้า */}
       <div className="cards">
@@ -53,8 +64,12 @@ export default function ProductProduce() {
 
             <div className="prod-info">
               <div className="row">
-                <span className="label">ชื่อสินค้า : </span>
-                <span className="pill">{it.name}</span>
+                <span className="label">เลขคำสั่งซื้อสินค้า : </span>
+                <span className="pill">{it.no}</span>
+              </div>
+              <div className="row">
+                <span className="label">วันที่สร้างคำสั่งผลิตสินค้า : </span>
+                <span className="pill">{it.date}</span>
               </div>
               <div className="row">
                 <span className="label">สถานะ : </span>
@@ -62,7 +77,7 @@ export default function ProductProduce() {
               </div>
             </div>
 
-            {/* ปุ่มขวา */}
+            {/* ปุ่มขวา 
             <div className="prod-actions">
               <button
                 className="btn primary"
@@ -71,15 +86,9 @@ export default function ProductProduce() {
                 สั่งผลิต
               </button>
               <button className="btn ghost">สั่งวัตถุดิบ</button>
-            </div>
+            </div>*/}
           </article>
         ))}
-      </div>
-
-      {/* ปุ่มเพิ่มด้านล่าง */}
-      <div className="add-wrap">
-        <button className="add-btn" onClick={() => navigate("/home/build-product")}>
-          + เพิ่มสินค้าที่ต้องการผลิต</button>
       </div>
 
       {/* Modal */}
@@ -89,13 +98,11 @@ export default function ProductProduce() {
           ต้องการผลิต <strong>{selected?.name}</strong> หรือไม่?
         </p>
 
-        <label className="modal-label" htmlFor="qty-input">
-          จำนวนที่ต้องการผลิต:
-        </label>
+        <label className="modal-label" htmlFor="qty-input">จำนวนที่ต้องการผลิต:</label>
         <input
           id="qty-input"
           type="number"
-          min="1"
+          min={1}
           className="modal-input"
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
@@ -119,13 +126,21 @@ export default function ProductProduce() {
 }
 
 /* ===== Modal Component ===== */
-function Modal({ open, onClose, children }) {
-  const dialogRef = useRef(null);
+function Modal({
+  open,
+  onClose,
+  children,
+}: {
+  open: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
+  const dialogRef = useRef<HTMLDivElement | null>(null);
 
   // ปิดด้วย ESC
   useEffect(() => {
     if (!open) return;
-    const onKey = (e) => e.key === "Escape" && onClose();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
@@ -133,7 +148,7 @@ function Modal({ open, onClose, children }) {
   // โฟกัสอัตโนมัติ
   useEffect(() => {
     if (open && dialogRef.current) {
-      const focusable = dialogRef.current.querySelector("input, button, [href], select, textarea");
+      const focusable = dialogRef.current.querySelector<HTMLElement>("input, button, [href], select, textarea");
       focusable?.focus();
     }
   }, [open]);
