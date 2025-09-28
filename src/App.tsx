@@ -6,10 +6,15 @@ import MaterialSelect from "./materialSelect";
 import BuildProduct from "./buildProduct";
 import RawMaterial from "./rawMaterial";
 import Product from "./product";
+import RawMaterialStock from "./rawMaterialStock"; // ⬅️ เพิ่มบรรทัดนี้
+import WareHouse from "./warehouse";
+import WarehouseStock from "./warehouseStock";
+
+
 
 // เพื่อน ๆ เมนูอื่น (ทำหน้าเปล่าไว้ก่อน)
 /*const RawMaterial = () => <div style={{padding:16}}>คลังวัตถุดิบ</div>;*/
-const Warehouse    = () => <div style={{padding:16}}>คลังสินค้า</div>;
+// const Warehouse    = () => <div style={{padding:16}}>คลังสินค้า</div>;
 const Qcontrol   = () => <div style={{padding:16}}>คุณภาพสินค้า</div>;
 const ProductionOrder = () => <div style={{padding:16}}>รายการคำสั่งซื้อสินค้า</div>;
 const SalesList    = () => <div style={{padding:16}}>รายการขายสินค้า</div>;
@@ -19,8 +24,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
-
+        <Route path="/" element={<Login />} />       
         {/* Home = แพลตฟอร์มหลัก (Navbar อยู่ตลอด) */}
         <Route path="/home" element={<Home />}>
           <Route index element={<Welcome />} />
@@ -28,7 +32,9 @@ function App() {
           <Route path="product-page" element={<ProductPage />} />
           {<Route path="material-select" element={<MaterialSelect />} />}
           <Route path="raw-material"    element={<RawMaterial />} />
-          <Route path="warehouse"       element={<Warehouse />} />
+          <Route path="raw-material/raw-stock" element={<RawMaterialStock />} />
+          <Route path="warehouse"       element={<WareHouse />} />
+          <Route path="warehouse/warehouse-stock" element={<WarehouseStock />} />
           <Route path="q-control"       element={<Qcontrol />} />
           <Route path="production-order" element={<ProductionOrder/>}/>
           <Route path="sales-list"      element={<SalesList />} />

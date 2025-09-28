@@ -1,36 +1,229 @@
-:root{
-  --navbar-h: 56px; /* ปรับตามความสูง navbar จริงของคุณ */
+/* ==== Global safe ==== */
+:where(html, body, #root){ height:100%; }
+:where(body){
+  margin:0;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+*,*::before,*::after{ box-sizing:border-box; }
+
+/* ==== Container (ขยายความกว้าง) ==== */
+.build-wrapper{
+  width: 100%;
+  max-width: 1400px;   /* ⬅️ ปรับได้: 1400/1600 หรือ 100% ถ้าอยากเต็มจอ */
+  margin: 0 auto;
+  padding: 16px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Title */
+.page-title{
+  font-size: 22px;
+  font-weight: 700;
+  color: #170142;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 8px 0 16px;
+}
+.page-subtitle{
+  font-size: 13px;
+  font-weight: 400;
+  color: #06095b;
+}
+
+/* ==== Card (ให้กินความกว้าง container เต็มที่) ==== */
+.card{
+  width: 100%;
+  max-width: none;       /* สำคัญ: ไม่ให้บีบความกว้าง */
+  background: #2f282b;
+  border: 1px solid #40373a;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+
+  flex: 1 1 auto;
+  min-height: 60vh;      /* ปรับสูงตามต้องการ */
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+/* Sections */
+.section{ margin-bottom: 16px; }
+.card > .section:last-of-type{ margin-bottom: 0; }
+
+/* Labels & Inputs */
+.label{ display:block;text-align: left ; font-size:14px; color:#e7e6ea; margin-bottom:6px; }
+.req{ color:#ffb3b7; }
+
+.input, .select, .textarea{
+  text-align: left;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #524449;
+  background: #3a3135;
+  color: #f2eceb;
+  outline: none;
+}
+.input::placeholder, .textarea::placeholder{ color:#c0bcc9; }
+.input:focus, .select:focus, .textarea:focus{
+  border-color:#8f7a80;
+  box-shadow:0 0 0 3px rgba(143,122,128,.25);
+}
+
+.is-invalid{
+  border-color:#e27a82 !important;
+  box-shadow:0 0 0 3px rgba(226,122,130,.22);
+}
+.field-error{ margin-top:6px; font-size:12px; color:#ffb3b7; }
+
+/* ==== Grid แถววัตถุดิบ (ขยายคอลัมน์ชื่อให้กว้าง) ==== */
+.row.header{
+  font-size:13px; color:#cccbd6;
+  padding:4px 2px 10px;
+  border-bottom:1px dashed #4a4044;
+  margin-bottom:8px;
+}
+.row{
+  display: grid;
+  grid-template-columns: 2.2fr .6fr .6fr .2fr;  /* เดิม 1.6fr .7fr .7fr .3fr */
+  gap: 10px;
+  align-items: start;
+  margin-bottom: 10px;
+  min-width: 0;                                   /* ป้องกันลูกล้น */
+}
+.col-add{ grid-column: 1 / -1; }
+
+/* Buttons */
+.btn{
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: #69585e;
+  color: #f7f3f2;
+  cursor: pointer;
+  transition: transform .06s ease, background .2s ease, box-shadow .2s ease;
+  user-select: none;
+}
+.btn:hover{ background:#7a676e; }
+.btn:active{ transform: translateY(1px); }
+
+.btn.primary{ background:#7c9c6f; }
+.btn.primary:hover{ background:#8aac7e; }
+
+.btn.outline{
+  background: transparent;
+  border-color: #6a5b5f;
+  color: #e7dfdd;
+}
+.btn.outline:hover{ background:#463b3f; }
+
+.btn.ghost{
+  background: transparent;
+  border-color: #4a4044;
+  color: #d8cecc;
+}
+.btn.ghost:hover{ background:#3d3438; }
+
+/* Footer */
+.footer{
+  display:flex; align-items:center; gap:12px;
+  justify-content:flex-start; margin-top:12px;
+}
+.hint{ font-size:12px; color:#c9bcbc; }
+
+/* Alerts */
+.alert{
+  border-radius:12px; padding:12px 14px; margin-bottom:14px; border:1px solid;
+}
+.alert.error{ background:#3b2a2d; border-color:#74454c; color:#ffd6da; }
+.alert.success{ background:#2e3a2f; border-color:#4b6b50; color:#dcffe3; }
+.alert-title{ font-weight:700; margin-bottom:6px; }
+.alert-list{ margin:0; padding-left:18px; }
+
+
+/* Responsive */
+@media (max-width: 900px){
+  .build-wrapper{ max-width: 100%; padding: 12px; }
+}
+@media (max-width: 720px){
+  .row{ grid-template-columns: 1fr 1fr; }
+  .col-action{ grid-column: 2; justify-self: end; }
+  .row.header{ display:none; }
+  .btn.primary{ width:100%; }
+}
+@media (max-width: 420px){
+  .page-title{ font-size:20px; }
+  .page-subtitle{ font-size:12px; }
+  .row{ gap:8px; }
 }
 
 
-.pp-wrap {display: flex;justify-content: center;align-items: flex-start; padding:32px 16px; color:#2b2b66; margin-top: 50px; }
-.pp-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-.pp-header h2 { margin:0; color:#2413b6; }
-.pp-back { border:2px solid #2413b6; background:#fff; border-radius:10px; padding:6px 10px; cursor:pointer; }
-
-.pp-container{width: 100%; max-width: 1200px; margin: 0 auto;}
-.pp-form { background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,.06); padding:16px;box-sizing: border-box;width: 100%; }
-.pp-row { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
-.pp-label { font-weight:700; color:#2b2b66; }
-.req { color:#d32f2f; margin-left:2px; }
-
-.pp-input, .pp-select, .pp-textarea {
-  border:1px solid #cfcfe8; border-radius:8px; padding:10px 12px; font-size:.95rem;
-}
-.pp-input:focus, .pp-select:focus, .pp-textarea:focus {
-  outline:none; border-color:#2413b6; box-shadow:0 0 0 2px #2413b620;
+/* === Force only "ชื่อสูตร" label + input align left === */
+label[for="recipeName"] {
+  display: block;
+  text-align: left !important;  /* ให้ label ชิดซ้าย */
+  margin-left: 0 !important;
 }
 
-.pp-error { color:#d32f2f; margin:8px 0; font-size:.9rem; }
+#recipeName {
+  text-align: left !important;  /* ให้ข้อความในกล่องเริ่มจากซ้าย */
+  width: 100% !important;       /* กว้างพอดีกับ column */
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+/* === แยกแต่ละฟิลด์ให้เป็นกล่องของตัวเอง + จัดวาง 2 คอลัมน์บนจอใหญ่ === */
 
-.pp-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:8px; }
+/* 1) เปลี่ยน .card ให้ทำตัวเป็น grid ของ "หลายกล่อง" */
+.card{
+  background: transparent;   /* ไม่ต้องมีพื้นหลังใหญ่ครอบทั้งหมด */
+  border: none;
+  box-shadow: none;
+  padding: 0;
 
-/* ปุ่ม reuse ดีไซน์เดิม */
-.btn{ border:2px solid transparent; border-radius:12px; padding:10px 14px; font-weight:700; cursor:pointer;
-      transition: background .15s, color .15s, transform .08s, border-color .15s, box-shadow .15s; }
-.btn.primary{ background:#2413b6; color:#fff; border-color:#2413b6; }
-.btn.primary:hover{ background:#3424d9; border-color:#3424d9; }
-.btn.primary:active{ transform:scale(.97); background:#1f10a1; border-color:#1f10a1; }
-.btn.ghost{ background:#ffffff; color:#2b2b66; border-color:#cfcfe8; }
-.btn.ghost:hover{ background:#f7f7fd; border-color:#b8bae8; }
-.btn.ghost:active{ transform:scale(.97); background:#efeffa; border-color:#9ea1e0; }
+  display: grid;
+  grid-template-columns: 1fr 1fr;   /* จอใหญ่: 2 คอลัมน์ */
+  gap: 16px;
+}
+
+/* 2) ให้ทุก .section เป็น “กล่อง” แยกกัน */
+.card > .section{
+  background: #2f282b;              /* พื้นหลังกล่อง */
+  border: 1px solid #40373a;
+  border-radius: 14px;
+  padding: 16px;
+  margin: 0;                        /* ใช้ gap จาก grid แทน */
+}
+
+/* 3) จัด span กล่องที่ควรเต็มแถว */
+.card > .section:nth-of-type(2){     /* ตารางวัตถุดิบ = กล่องที่ 2 ใน TSX */
+  grid-column: 1 / -1;               /* กินเต็มความกว้าง (2 คอลัมน์) */
+}
+.card > .footer{
+  grid-column: 1 / -1;               /* ปุ่มบันทึกอยู่เต็มความกว้างด้านล่าง */
+  background: transparent;
+  padding: 0;
+  margin-top: 4px;
+}
+
+/* 4) ปรับ label + input ของ "ชื่อสูตร" ให้สวยกับกล่องใหม่ (เฉพาะช่องนี้) */
+label[for="recipeName"]{
+  display:block;
+  text-align:left;
+  margin-bottom:6px;
+}
+#recipeName{
+  width:100%;
+  text-align:left;
+}
+
+/* 5) มือถือ/จอแคบ → 1 คอลัมน์ตามเดิม */
+@media (max-width: 900px){
+  .card{ grid-template-columns: 1fr; }
+}

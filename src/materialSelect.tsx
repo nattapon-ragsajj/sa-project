@@ -44,7 +44,7 @@ export default function MaterialSelect() {
       materials
     });
     // เสร็จแล้วอาจพากลับหน้ารายการผลิต หรือโชว์ success
-    navigate("/home/product-produce");
+    navigate("/home/product");
   };
 
   return (

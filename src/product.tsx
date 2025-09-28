@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "./product.css";
 import { useNavigate } from "react-router-dom";
 
+
 interface Item {
   id: number;
   no: string;
@@ -9,7 +10,9 @@ interface Item {
   date: string;
 }
 
-export default function ProductProduce() {
+
+
+export default function Product() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<Item | null>(null);
@@ -40,6 +43,9 @@ export default function ProductProduce() {
   };
 
   const qtyValid = quantity !== "" && !isNaN(Number(quantity)) && Number(quantity) > 0;
+
+
+  
 
   return (
     <div className="produce-page">

@@ -69,7 +69,7 @@ function Login() {
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          style={{ width: "270px",height: "20px", padding: "10px", borderRadius: "10px" }}
+          style={{ width: "290px",height: "40px", padding: "10px", borderRadius: "10px" }}
         />
         <label style={{color: "white" ,fontSize: "12px",marginBottom: "-14px",fontFamily: "Arial, sans-serif"}}>รหัสผ่าน</label>
         <input
@@ -77,7 +77,7 @@ function Login() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={{ width: "270px",height: "20px", padding: "10px", borderRadius: "10px" }}
+          style={{ width: "290px",height: "40px", padding: "10px", borderRadius: "10px" }}
         />
         <label style={{textAlign: "right",color: "white" ,fontSize: "12px",marginTop: "-14px",fontFamily: "Arial, sans-serif"}}>ลืมรหัสผ่าน</label>
 
