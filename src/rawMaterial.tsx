@@ -2,54 +2,54 @@ import { useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./rawMaterial.css";
 
-type Material = {
+type StockRow = {
   id: number;
-  code: string;
-  name: string;
-  category: string;
-  qty: number;
+  orderNo: string;
+  materialName: string;
+  requiredQty: number;
   unit: string;
-  minQty: number;
-  note?: string;
+  status: "ปกติ" | "ต่ำกว่าขั้นต่ำ" | "รอตรวจสอบ";
+  enough: "พอ" | "ไม่พอ";
 };
 
-const seed: Material[] = [
-  { id: 1, code: "RM-001", name: "น้ำตาลทรายขาว", category: "วัตถุดิบหลัก", qty: 120, unit: "กก.", minQty: 50 },
-  { id: 2, code: "RM-002", name: "แป้งสาลี",     category: "วัตถุดิบหลัก", qty: 30,  unit: "กก.", minQty: 40 },
-  { id: 3, code: "RM-003", name: "เนยจืด",       category: "วัตถุดิบเสริม", qty: 12,  unit: "กก.", minQty: 10 },
-  { id: 4, code: "RM-004", name: "ชาเขียวมัทฉะ", category: "สารแต่งกลิ่น/สี", qty: 6, unit: "กก.", minQty: 8 },
-  { id: 5, code: "RM-005", name: "เกลือ",        category: "วัตถุดิบเสริม", qty: 80,  unit: "กก.", minQty: 30 },
+const seed: StockRow[] = [
+  { id: 1, orderNo: "RM-001", materialName: "น้ำตาลทรายขาว", requiredQty: 50, unit: "กก.", status: "ปกติ",           enough: "พอ" },
+  { id: 2, orderNo: "RM-002", materialName: "แป้งสาลี",       requiredQty: 60, unit: "กก.", status: "ต่ำกว่าขั้นต่ำ", enough: "ไม่พอ" },
+  { id: 3, orderNo: "RM-003", materialName: "เนยจืด",         requiredQty: 12, unit: "กก.", status: "ปกติ",           enough: "ไม่พอ" },
+  { id: 4, orderNo: "RM-004", materialName: "ชาเขียวมัทฉะ",   requiredQty: 10, unit: "กก.", status: "ต่ำกว่าขั้นต่ำ", enough: "พอ" },
+  { id: 5, orderNo: "RM-005", materialName: "เกลือ",          requiredQty: 20, unit: "กก.", status: "ปกติ",           enough: "ไม่พอ" },
 ];
 
 export default function RawMaterial() {
-  const [data, setData] = useState<Material[]>(seed);
+  const [data, setData] = useState<StockRow[]>(seed);
   const [search, setSearch] = useState("");
-  const [catFilter, setCatFilter] = useState("ทั้งหมด");
-  const [sortKey, setSortKey] = useState<keyof Material>("code");
+  const [sortKey, setSortKey] = useState<keyof StockRow>("orderNo");
   const [sortAsc, setSortAsc] = useState(true);
 
-  // modal
+  // ===== Modal: เพิ่ม/แก้ไข (เผื่อใช้งานภายหลัง)
   const [open, setOpen] = useState(false);
-  const [editing, setEditing] = useState<Material | null>(null);
-  const [form, setForm] = useState<Material>({
-    id: 0, code: "", name: "", category: "", qty: 0, unit: "กก.", minQty: 0, note: ""
+  const [editing, setEditing] = useState<StockRow | null>(null);
+  const [form, setForm] = useState<StockRow>({
+    id: 0, orderNo: "", materialName: "", requiredQty: 0, unit: "กก.", status: "ปกติ", enough: "พอ",
   });
   const [err, setErr] = useState("");
 
-  const categories = useMemo(
-    () => ["ทั้งหมด", ...Array.from(new Set(data.map(d => d.category)))],
-    [data]
-  );
+  // ===== Modal: ใบคำสั่งซื้อวัตถุดิบ
+  const [poOpen, setPoOpen] = useState(false);
+
+  const insufficient = useMemo(() => data.filter(d => d.enough === "ไม่พอ"), [data]);
 
   const filtered = useMemo(() => {
     const s = search.trim().toLowerCase();
     return data
-      .filter(d => (catFilter === "ทั้งหมด" ? true : d.category === catFilter))
       .filter(d =>
         !s ||
-        d.code.toLowerCase().includes(s) ||
-        d.name.toLowerCase().includes(s) ||
-        d.category.toLowerCase().includes(s)
+        d.orderNo.toLowerCase().includes(s) ||
+        d.materialName.toLowerCase().includes(s) ||
+        String(d.requiredQty).includes(s) ||
+        d.unit.toLowerCase().includes(s) ||
+        d.status.toLowerCase().includes(s) ||
+        d.enough.toLowerCase().includes(s)
       )
       .sort((a, b) => {
         const av = typeof a[sortKey] === "number" ? (a[sortKey] as number) : String(a[sortKey]);
@@ -58,24 +58,16 @@ export default function RawMaterial() {
         if (av > bv) return sortAsc ? 1 : -1;
         return 0;
       });
-  }, [data, search, catFilter, sortKey, sortAsc]);
+  }, [data, search, sortKey, sortAsc]);
 
-  const onSort = (key: keyof Material) => {
+  const onSort = (key: keyof StockRow) => {
     if (sortKey === key) setSortAsc(v => !v);
     else { setSortKey(key); setSortAsc(true); }
   };
 
-  const resetForm = () => {
-    setForm({ id: 0, code: "", name: "", category: "", qty: 0, unit: "กก.", minQty: 0, note: "" });
-    setErr("");
-  };
-  const openAdd = () => { setEditing(null); resetForm(); setOpen(true); };
-  const openEdit = (row: Material) => { setEditing(row); setForm({ ...row }); setErr(""); setOpen(true); };
-
   const save = () => {
-    if (!form.code.trim() || !form.name.trim()) { setErr("กรุณากรอก 'รหัส' และ 'ชื่อวัตถุดิบ'"); return; }
-    if (form.qty < 0 || form.minQty < 0) { setErr("จำนวนต้องไม่ติดลบ"); return; }
-
+    if (!form.orderNo.trim() || !form.materialName.trim()) { setErr("กรุณากรอก 'เลขคำสั่งผลิต' และ 'ชื่อวัตถุดิบ'"); return; }
+    if (form.requiredQty < 0) { setErr("จำนวนที่ต้องใช้ต้องไม่ติดลบ"); return; }
     if (editing) setData(prev => prev.map(d => (d.id === editing.id ? { ...form, id: editing.id } : d)));
     else {
       const newId = Math.max(0, ...data.map(d => d.id)) + 1;
@@ -83,124 +75,146 @@ export default function RawMaterial() {
     }
     setOpen(false);
   };
+
   const remove = (id: number) => {
-    if (!confirm("ต้องการลบวัตถุดิบนี้ใช่หรือไม่?")) return;
+    if (!confirm("ต้องการลบแถวนี้ใช่หรือไม่?")) return;
     setData(prev => prev.filter(d => d.id !== id));
+  };
+
+  const openPO = () => setPoOpen(true);
+  const closePO = () => setPoOpen(false);
+
+  // ตัวอย่าง "อัปเดตคลัง" — เปลี่ยนรายการที่ไม่พอให้เป็น "พอ" แล้วปิดใบ
+  const confirmUpdateStock = () => {
+    setData(prev => prev.map(d => d.enough === "ไม่พอ" ? { ...d, enough: "พอ" } : d));
+    setPoOpen(false);
   };
 
   return (
     <div className="rm-page">
-      {/* แถบหัวข้อ + เมนูย่อย + ปุ่มด้านขวา */}
       <div className="rm-top">
         <div className="rm-tabs">
           <NavLink to="/home/raw-material" end className="tab-link">การจัดการ</NavLink>
           <NavLink to="/home/raw-material/raw-stock" className="tab-link">คลัง</NavLink>
-      </div>
-
-
+        </div>
         <div className="rm-right-buttons">
-          {/* <button className="btn primary" onClick={openAdd}>+ เพิ่มวัตถุดิบ</button> */}
           <button className="btn gray">สั่งซื้อวัตถุดิบ</button>
           <button className="btn danger">โอนย้ายคลัง</button>
         </div>
       </div>
 
-      {/* แถวเครื่องมือค้นหา/กรอง */}
       <div className="rm-toolbar">
-        <div className="tools-left">
-          <div className="title">คลังวัตถุดิบ</div>
-        </div>
+        <div className="tools-left"><div className="title">คลังวัตถุดิบ</div></div>
         <div className="tools-right">
           <input
             className="rm-input"
-            placeholder="ค้นหา: รหัส / ชื่อ / หมวดหมู่"
+            placeholder="ค้นหา: เลขคำสั่ง / ชื่อ / สถานะ / ผลการตรวจสอบ"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <select
-            className="rm-input"
-            value={catFilter}
-            onChange={(e) => setCatFilter(e.target.value)}
-          >
-            {categories.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
         </div>
       </div>
 
-      {/* ตาราง */}
       <div className="rm-table">
         <div className="rm-row rm-head">
-          <button className="th" onClick={() => onSort("code")}>เลขคำสั่งผลิต</button>
-          <button className="th" onClick={() => onSort("name")}>ชื่อวัตถุดิบ</button>
-          <button className="th" onClick={() => onSort("category")}>หมวดหมู่</button>
-          <button className="th" onClick={() => onSort("qty")}>คงเหลือ</button>
-          <div className="th">ขั้นต่ำ</div>
-          <div className="th">การจัดการ</div>
+          <button className="th" onClick={() => onSort("orderNo")}>เลขคำสั่งผลิต</button>
+          <button className="th" onClick={() => onSort("materialName")}>ชื่อวัตถุดิบ</button>
+          <button className="th" onClick={() => onSort("requiredQty")}>จำนวนที่ต้องใช้</button>
+          <button className="th" onClick={() => onSort("unit")}>หน่วย</button>
+          <div className="th">สถานะ</div>
+          <div className="th">ผลการตรวจสอบ</div>
         </div>
 
         {filtered.map(row => {
-          const low = row.qty < row.minQty;
+          const isRed = row.enough === "ไม่พอ"; // แดงเฉพาะ "ไม่พอ"
           return (
-            <div key={row.id} className={`rm-row ${low ? "low" : ""}`}>
-              <div className="td mono">{row.code}</div>
-              <div className="td">{row.name}</div>
-              <div className="td">{row.category}</div>
-              <div className="td mono">{row.qty.toLocaleString()} <span className="unit">{row.unit}</span></div>
-              <div className="td mono">{row.minQty.toLocaleString()} <span className="unit">{row.unit}</span></div>
-              <div className="td actions">
-                <button className="btn ghost" onClick={() => openEdit(row)}>แก้ไข</button>
-                <button className="btn danger" onClick={() => remove(row.id)}>ลบ</button>
-              </div>
+            <div key={row.id} className={`rm-row ${isRed ? "low" : ""}`}>
+              <div className="td mono">{row.orderNo}</div>
+              <div className="td">{row.materialName}</div>
+              <div className="td mono">{row.requiredQty.toLocaleString()}</div>
+              <div className="td">{row.unit}</div>
+              <div className="td">{row.status}</div>
+              <div className="td">{row.enough}</div>
             </div>
           );
         })}
-
         {filtered.length === 0 && <div className="rm-empty">ไม่พบข้อมูล</div>}
       </div>
 
-      {/* Modal เพิ่ม/แก้ไข */}
+      <div className="rm-footer-actions">
+        <button
+          className="btn primary"
+          onClick={openPO}
+          disabled={insufficient.length === 0}
+          title={insufficient.length === 0 ? "ไม่มีรายการที่ไม่เพียงพอ" : ""}
+        >
+          + สร้างใบคำสั่งซื้อวัตถุดิบ
+        </button>
+      </div>
+
+      {/* ===== ใบคำสั่งซื้อวัตถุดิบ ===== */}
+      {poOpen && (
+        <>
+          <button className="po-overlay" aria-label="close" onClick={closePO} />
+          <div className="po-wrap">
+            <div className="po-card">
+              <h3 className="po-title">ใบคำสั่งซื้อวัตถุดิบ</h3>
+              <div className="po-paper">
+                <div className="po-list">
+                  {insufficient.map(item => (
+                    <div key={item.id} className="po-line">
+                      <div className="po-name">ชื่อวัตถุดิบ : {item.materialName}</div>
+                      <div className="po-qty">จำนวน : {item.requiredQty} {item.unit}</div>
+                    </div>
+                  ))}
+                  {insufficient.length === 0 && <div className="po-empty">ไม่มีรายการ</div>}
+                </div>
+              </div>
+              <div className="po-actions">
+                <button className="btn soft" onClick={closePO}>ยกเลิก</button>
+                <button className="btn primary solid" onClick={confirmUpdateStock}>อัปเดตคลัง</button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* ===== Modal เพิ่ม/แก้ไข (เก็บไว้) ===== */}
       {open && (
         <>
           <button className="rm-overlay" aria-label="close" onClick={() => setOpen(false)} />
           <div className="rm-modal" role="dialog" aria-modal="true">
-            <h3 className="modal-title">{editing ? "แก้ไขวัตถุดิบ" : "เพิ่มวัตถุดิบ"}</h3>
-
+            <h3 className="modal-title">{editing ? "แก้ไขแถว" : "เพิ่มแถว"}</h3>
             <div className="form-grid">
-              <label>รหัส<span className="req">*</span>
-                <input value={form.code} onChange={e => setForm({ ...form, code: e.target.value })} />
+              <label>เลขคำสั่งผลิต<span className="req">*</span>
+                <input value={form.orderNo} onChange={e => setForm({ ...form, orderNo: e.target.value })} />
               </label>
               <label>ชื่อวัตถุดิบ<span className="req">*</span>
-                <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+                <input value={form.materialName} onChange={e => setForm({ ...form, materialName: e.target.value })} />
               </label>
-              <label>หมวดหมู่
-                <input value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} />
+              <label>จำนวนที่ต้องใช้
+                <input type="number" min={0} value={form.requiredQty} onChange={e => setForm({ ...form, requiredQty: Number(e.target.value) })}/>
               </label>
-              <label>คงเหลือ
-                <div className="inline">
-                  <input
-                    type="number" min={0}
-                    value={form.qty}
-                    onChange={e => setForm({ ...form, qty: Number(e.target.value) })}
-                  />
-                  <select value={form.unit} onChange={e => setForm({ ...form, unit: e.target.value })}>
-                    <option>กก.</option><option>ลิตร</option><option>ก.</option><option>ชิ้น</option>
-                  </select>
-                </div>
+              <label>หน่วย
+                <select value={form.unit} onChange={e => setForm({ ...form, unit: e.target.value })}>
+                  <option>กก.</option><option>ลิตร</option><option>ก.</option><option>ชิ้น</option>
+                </select>
               </label>
-              <label>ขั้นต่ำ (แจ้งเตือน)
-                <input
-                  type="number" min={0}
-                  value={form.minQty}
-                  onChange={e => setForm({ ...form, minQty: Number(e.target.value) })}
-                />
+              <label>สถานะ
+                <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value as StockRow["status"] })}>
+                  <option value="ปกติ">ปกติ</option>
+                  <option value="ต่ำกว่าขั้นต่ำ">ต่ำกว่าขั้นต่ำ</option>
+                  <option value="รอตรวจสอบ">รอตรวจสอบ</option>
+                </select>
               </label>
-              <label className="col-span">หมายเหตุ
-                <textarea rows={2} value={form.note} onChange={e => setForm({ ...form, note: e.target.value })} />
+              <label>ผลการตรวจสอบ
+                <select value={form.enough} onChange={e => setForm({ ...form, enough: e.target.value as StockRow["enough"] })}>
+                  <option value="พอ">พอ</option>
+                  <option value="ไม่พอ">ไม่พอ</option>
+                </select>
               </label>
             </div>
-
             {err && <div className="rm-error">{err}</div>}
-
             <div className="modal-actions">
               <button className="btn ghost" onClick={() => setOpen(false)}>ยกเลิก</button>
               <button className="btn primary" onClick={save}>{editing ? "บันทึกการแก้ไข" : "บันทึก"}</button>

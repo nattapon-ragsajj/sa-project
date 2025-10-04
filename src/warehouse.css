@@ -1,126 +1,123 @@
-/* หน้า + โทนสีอ่อน (พื้นหลังเทาอ่อนตามภาพ) */
+/* พื้นหลัง + ฟอนต์ */
 .wh-page{
+  background:#f3f4f7;
   min-height:100vh;
   padding:16px;
-  background:#f3f4f7;
   color:#1b1440;
+  font-family:system-ui, Arial, sans-serif;
   box-sizing:border-box;
-  font-family: system-ui, Arial, sans-serif;
 }
 
-/* แถบบน: เมนูย่อยซ้าย + ปุ่มขวา (เรียงตั้งบน desktop ตามภาพ) */
-.wh-top{
-  display:grid;
-  grid-template-columns: 1fr auto;
-  align-items:flex-start;
-  gap:12px;
+/* เมนูเม็ดกลมด้านบน */
+.wh-topmenu{ background:#2b0c6b; padding:18px 16px; border-radius:8px; }
+.pill-tabs{ display:flex; gap:24px; justify-content:center; }
+.pill{
+  background:#e6e0ff; color:#1b1440; font-weight:800;
+  padding:14px 36px; border-radius:20px; text-decoration:none;
+  display:inline-block; min-width:160px; text-align:center;
 }
-.wh-tabs{ display:flex; gap:8px; }
-.tab{
-  border:none; cursor:pointer; padding:6px 12px; border-radius:6px;
-  background:#e9e9f5; color:#2b2b66; font-weight:700; font-size:.9rem;
-}
-.tab.active{ background:#2b2b66; color:#fff; }
-.wh-right-buttons{
-  display:flex; flex-direction:column; gap:8px;
-}
-.btn{
-  border:none; border-radius:8px; padding:8px 12px; font-weight:700; cursor:pointer;
-  transition:transform .12s ease, background .15s ease, color .15s ease;
-}
-.btn.primary{ background:#2413b6; color:#fff; }
-.btn.primary:hover{ transform:scale(1.03); background:#0b0472; }
-.btn.gray{ background:#e9e9f5; color:#2b2b66; }
-.btn.gray:hover{ background:#dbdbef; }
-.btn.danger{ background:#ffebee; color:#b71c1c; }
-.btn.danger:hover{ background:#ffcdd2; }
-.btn.ghost{ background:#ffffff; color:#2b2b66; border:2px solid #cfcfe8; }
-.btn.ghost:hover{ background:#f7f7fd; }
+.pill.active{ background:#d1c4ff; box-shadow:inset 0 0 0 3px #39108a; }
 
-/* แถวเครื่องมือใต้เมนูย่อย */
-.wh-toolbar{
-  display:flex; justify-content:space-between; align-items:center;
-  margin:12px 0 8px;
-}
-.title{ font-weight:700; color:#2b2b66; }
-.tools-right{ display:flex; gap:8px; }
-.wh-input{
-  padding:8px 10px; border:1px solid #cfcfe8; border-radius:8px; background:#fff;
-}
+/* หัวข้อหน้า + ซับแท็บ */
+.wh-section-title{ margin:16px 0 10px; font-weight:800; }
+.wh-subtabs{ display:flex; gap:10px; margin-bottom:8px; }
+.subtab{ border:none; background:#eceaf6; color:#1b1440; padding:8px 16px; border-radius:8px; font-weight:700; }
+.subtab.active{ background:#1b1440; color:#fff; }
 
-/* ตารางสไตล์เข้มแบบในภาพ */
+/* เครื่องมือค้นหา */
+.wh-tools{ display:flex; gap:8px; justify-content:flex-end; margin-bottom:10px; }
+.wh-input{ padding:10px 12px; border:1px solid #d5d5ee; border-radius:10px; background:#fff; }
+
+/* ตาราง */
+.wh-table-wrap{}
 .wh-table{
-  background:#2a2a2f;          /* ตัวตารางสีเทาเข้ม */
-  border-radius:8px;
-  overflow:hidden;
-  box-shadow:0 2px 10px rgba(0,0,0,.12);
+  background:#2a2a2f; color:#e9e9f2; border-radius:10px; overflow:hidden;
+  box-shadow:0 6px 16px rgba(0,0,0,.16);
 }
 .wh-row{
   display:grid;
-  grid-template-columns: 1fr 2fr 1.3fr 1.1fr 1.1fr 1.2fr;
-  padding:10px 12px;
+  grid-template-columns: 1.1fr 1.2fr 1.8fr .9fr .8fr 1.2fr 1.2fr;
   align-items:center;
-  color:#e8e8f0;
+  gap:12px;
+  padding:14px 12px;
+  cursor:pointer;
 }
 .wh-head{
-  position:sticky; top:0;
-  background:#1f1f25;
-  color:#fff; font-weight:700;
-  z-index:1;
+  position:sticky; top:0; background:#1f1f25; color:#fff; font-weight:800; z-index:1;
 }
-.wh-head .th{
-  text-align:left; background:transparent; border:none; color:#fff;
-  font-weight:700; cursor:pointer; padding:0;
-}
-.wh-row:not(.wh-head){ border-top:1px solid #3a3a3f; }
-.td{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.wh-body{ border-top:1px solid #3a3a3f; }
+.wh-body.alt{ background:#343436; }
+
 .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
-.unit{ margin-left:4px; color:#bdbddb; }
-.actions{ display:flex; gap:8px; }
+.wh-empty{ padding:18px; text-align:center; color:#bdbddb; }
 
-/* ไฮไลท์สต็อกต่ำ */
-/* .low{ background: linear-gradient(90deg, rgba(255, 117, 117, .16), rgba(42,42,47,1)); } */
-.low {
-  background: #e63737;   /* แดงอ่อน */
-  color: #ffffff;        /* ตัวอักษรเข้มอ่านง่าย */
+/* ========== แผ่นโอเวอร์เลย์สีน้ำเงิน ========== */
+.sheet-backdrop{
+  position:fixed; inset:0; background:rgba(0,0,0,.45); border:0; z-index:2000;
 }
+.sheet{
+  position:fixed; z-index:2001;
+  left:50%; top:50%; transform:translate(-50%,-50%);
+  width:min(980px, 94vw); min-height:360px;
+  background:#0c2a78; border-radius:28px; padding:28px;
+  display:grid; grid-template-columns: 1fr 1.2fr; gap:24px;
+  color:#fff;
+  box-shadow:0 24px 32px rgba(0,0,0,.35);
+}
+.sheet-left{
+  display:grid; gap:14px; align-content:start;
+}
+.sheet-left div{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+.sheet-left span{ opacity:.85; }
+.sheet-left b{ text-align:right; }
 
-/* ไม่มีข้อมูล */
-.wh-empty{ padding:18px; text-align:center; color:#bdbddb; background:#2a2a2f; }
+/* กล่องฟอร์มด้านขวา */
+.sheet-right{ display:flex; justify-content:center; align-items:flex-start; }
+.form-card{
+  width:100%;
+  background:#d9d0ff; color:#0e1b4d;
+  border-radius:22px; padding:18px 18px 16px;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.35);
+}
+.form-card h3{ margin:0 0 10px; text-align:center; color:#0e1b4d; }
+.inline{ display:grid; grid-template-columns: 1fr auto auto; align-items:center; gap:10px; margin:10px 0; }
+.block{ display:flex; flex-direction:column; gap:6px; margin:10px 0; }
+.form-card input, .form-card textarea{
+  border:1px solid #bcb6ef; border-radius:10px; padding:10px 12px; background:#fff;
+}
+.form-card textarea{ resize:vertical; }
+.unit{ opacity:.8; }
 
-/* Modal (ใช้โทนสว่างเพื่ออ่านง่าย) */
-.wh-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.45); border:0; z-index:2000; }
-.wh-modal{
-  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
-  width:min(720px, 92vw); background:#fff; color:#2b2b66;
-  border-radius:12px; box-shadow:0 18px 16px rgba(0,0,0,.25); padding:18px 16px; z-index:2001;
+/* ปุ่มสลับประเภท */
+.seg{ display:inline-flex; gap:8px; }
+.seg-btn{
+  border:none; padding:8px 14px; border-radius:10px; cursor:pointer; background:#efeaff; color:#1b1440; font-weight:700;
 }
-.modal-title{ margin:0 0 8px; color:#2413b6; }
-.wh-error{ color:#d32f2f; margin:8px 0; font-size:.9rem; }
-.modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:10px; }
+.seg-btn.on{ background:#1b1440; color:#fff; }
 
-.form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:6px; }
-.form-grid label{ display:flex; flex-direction:column; gap:6px; font-weight:600; color:#2b2b66; }
-.form-grid input, .form-grid select, .form-grid textarea{
-  border:1px solid #cfcfe8; border-radius:8px; padding:10px 12px; font-size:.95rem;
+/* ปุ่มล่าง */
+.sheet-actions{
+  display:flex; gap:14px; justify-content:flex-end; margin-top:14px;
 }
-.form-grid input:focus, .form-grid select:focus, .form-grid textarea:focus{
-  outline:none; border-color:#2413b6; box-shadow:0 0 0 2px #2413b620;
+.btn{
+  border:none; border-radius:14px; padding:12px 18px; font-weight:800; cursor:pointer;
 }
-.form-grid .inline{ display:flex; gap:8px; align-items:center; }
-.form-grid .col-span{ grid-column:1/-1; }
+.btn.cancel{ background:#ffd4d8; color:#1b1440; }
+.btn.confirm{ background:#cfe8ff; color:#1b1440; }
+
+.form-error{ color:#b00020; margin-top:6px; font-weight:700; }
 
 /* Responsive */
-@media (max-width: 900px){
-  .wh-right-buttons{ flex-direction:row; }
-  .wh-row{ grid-template-columns: 1fr 1.6fr 1.2fr .9fr .9fr 1fr; }
+@media (max-width: 860px){
+  .sheet{ grid-template-columns: 1fr; gap:18px; padding:22px; }
+  .sheet-left div{ grid-template-columns: 1.2fr 1fr; }
 }
 
 
+.ws-page { padding: 16px 20px; }
+.ws-title { font-weight: 700; margin: 8px 0 12px; margin-top: 50px;}
 
-
-/* Tabs (NavLink) */
-.wh-tabs{ display:flex; gap:8px; }
+.wh-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
 .tab-link{
   text-decoration:none;
   display:inline-block;
@@ -131,8 +128,80 @@
   font-weight:700;
   font-size:.9rem;
 }
+
+
+
 .tab-link.active,
 .tab-link[aria-current="page"]{
   background:#2b2b66;
   color:#fff;
+}
+.ws-tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+.ws-input {
+  height: 36px; padding: 0 10px; border: 1px solid #d7dbe3; border-radius: 8px; background: #fff; min-width: 180px;
+}
+.ws-btn {
+  height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid transparent; background: #2f67ff; color: #fff; cursor: pointer;
+}
+.ws-btn:hover { filter: brightness(0.95); }
+.ws-btn.outline { background: #fff; color: #2f67ff; border-color: #2f67ff; }
+.ws-btn.danger { background: #ff4d4f; }
+.ws-spacer { flex: 1; }
+
+.ws-table-wrap { border: 1px solid #e5e8ef; border-radius: 12px; overflow-x: auto; background: #fff; }
+.ws-table { width: 100%; display: grid; }
+.ws-row {
+  display: grid;
+  /* เวลา | ประเภท | เลขล็อต | เลขคำสั่ง | ชื่อสินค้า | จำนวน | หน่วย | หมายเหตุ */
+  grid-template-columns:
+    190px         /* เวลา */
+    110px         /* ประเภท (pill) */
+    140px         /* เลขล็อต */
+    140px         /* เลขคำสั่งผลิต */
+    minmax(220px, 1.6fr)  /* ชื่อสินค้า – กว้างขึ้น */
+    100px         /* จำนวน */
+    80px          /* หน่วย */
+    minmax(220px, 1.4fr); /* หมายเหตุ – กว้างขึ้น */
+  gap: 12px;               /* เว้นช่องเพิ่มเล็กน้อย */
+  padding: 10px 12px;
+  align-items: center;
+}
+.ws-head { background: #f4f6fb; font-weight: 600; color: #334; }
+.ws-body { border-top: 1px solid #f0f2f7; }
+.ws-body.alt { background: #fcfdff; }
+
+.ws-row > div { min-width: 0; }
+
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+.truncate { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+.pill { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; text-align: center; }
+.pill.ok   { background: #eaf8ef; color: #1b7f3b; }
+.pill.warn { background: #fff3e6; color: #b85b00; }
+
+.ws-empty { padding: 16px; text-align: center; color: #778; }
+
+/* จัดคอลัมน์ที่ 2 = "ประเภท" ให้อยู่กึ่งกลางแนวนอน */
+.ws-head > div:nth-child(2) { 
+  justify-self: center; 
+  text-align: center; 
+}
+.ws-body > div:nth-child(2) { 
+  justify-self: center;        /* กล่อง pill อยู่กลางช่อง */
+}
+
+
+/* ปรับให้เหมาะกับจอกลาง */
+@media (max-width: 1280px) {
+  .ws-row {
+    grid-template-columns:
+      180px 100px 130px 130px minmax(200px, 1.4fr) 90px 70px minmax(200px, 1.2fr);
+  }
+}
+
+.wh-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
 }

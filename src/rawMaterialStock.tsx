@@ -62,7 +62,7 @@ export default function RawMaterialStock() {
       <div className="rm-top">
         <div className="rm-tabs">
           <NavLink to="/home/raw-material" end className="tab-link">การจัดสรร</NavLink>
-          <NavLink to="/home/raw-material/stock" className="tab-link">คลัง</NavLink>
+          <NavLink to="/home/raw-material/raw-stock" className="tab-link">คลัง</NavLink>
         </div>
         <div className="rm-right-buttons">
           <button className="btn primary" onClick={openAdd}>+ เพิ่มวัตถุดิบ</button>

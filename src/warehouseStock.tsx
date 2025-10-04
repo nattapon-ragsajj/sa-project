@@ -1,151 +1,182 @@
+import { useEffect, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
-import "./warehouse.css";
+import "./warehouseStock.css";
 
-type StockRow = {
-  id: number;
+type TxType = "ขาย" | "หมดอายุ";
+
+type TxRow = {
+  id: number;          // running id
+  time: string;        // ISO string
+  type: TxType;        // ประเภทการนำออก
+  lotNo: string;
   orderNo: string;
-  materialName: string;
-  requiredQty: number;
+  name: string;
+  qty: number;
   unit: string;
-  status: "ปกติ" | "ต่ำกว่าขั้นต่ำ" | "รอตรวจสอบ";
-  qa: "ผ่าน" | "ไม่ผ่าน" | "รอผล";
+  note?: string;
 };
 
-const seed: StockRow[] = [
-  { id: 1, orderNo: "RM-001", materialName: "น้ำตาลทรายขาว", requiredQty: 50, unit: "กก.", status: "ปกติ", qa: "ผ่าน" },
-  { id: 2, orderNo: "RM-002", materialName: "แป้งสาลี", requiredQty: 60, unit: "กก.", status: "ต่ำกว่าขั้นต่ำ", qa: "รอผล" },
-  { id: 3, orderNo: "RM-003", materialName: "เนยจืด", requiredQty: 12, unit: "กก.", status: "ปกติ", qa: "ผ่าน" },
-  { id: 4, orderNo: "RM-004", materialName: "ชาเขียวมัทฉะ", requiredQty: 10, unit: "กก.", status: "ต่ำกว่าขั้นต่ำ", qa: "ไม่ผ่าน" },
-  { id: 5, orderNo: "RM-005", materialName: "เกลือ", requiredQty: 20, unit: "กก.", status: "ปกติ", qa: "ผ่าน" },
+const seed: TxRow[] = [
+  {
+    id: 1,
+    time: new Date().toISOString(),
+    type: "ขาย",
+    lotNo: "L-240901",
+    orderNo: "PO-001",
+    name: "น้ำตาลทรายขาว",
+    qty: 5,
+    unit: "กก.",
+    note: "เดโมข้อมูลเริ่มต้น",
+  },
 ];
 
-export default function WarehouseStock() {
-  const [rows, setRows] = useState<StockRow[]>(seed);
-  const [open, setOpen] = useState(false);
-  const [form, setForm] = useState<StockRow>({
-    id: 0,
-    orderNo: "",
-    materialName: "",
-    requiredQty: 0,
-    unit: "กก.",
-    status: "ปกติ",
-    qa: "รอผล",
-  });
+function readHistory(): TxRow[] {
+  try {
+    const raw = localStorage.getItem("wh-history");
+    if (!raw) return seed;
+    const arr = JSON.parse(raw) as TxRow[];
+    if (!Array.isArray(arr)) return seed;
+    return arr;
+  } catch {
+    return seed;
+  }
+}
 
-  const openAdd = () => {
-    setForm({
-      id: 0,
-      orderNo: "",
-      materialName: "",
-      requiredQty: 0,
-      unit: "กก.",
-      status: "ปกติ",
-      qa: "รอผล",
-    });
-    setOpen(true);
+function saveHistory(rows: TxRow[]) {
+  localStorage.setItem("wh-history", JSON.stringify(rows));
+}
+
+export default function WarehouseStock() {
+  const [rows, setRows] = useState<TxRow[]>(readHistory());
+  const [q, setQ] = useState("");
+  const [tx, setTx] = useState<"ทั้งหมด" | TxType>("ทั้งหมด");
+  const [dateFrom, setDateFrom] = useState<string>("");
+  const [dateTo, setDateTo] = useState<string>("");
+
+  useEffect(() => {
+    // sync from storage if other tab/page updates
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "wh-history") setRows(readHistory());
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  const filtered = useMemo(() => {
+    const s = q.trim().toLowerCase();
+    const from = dateFrom ? new Date(dateFrom + "T00:00:00") : null;
+    const to = dateTo ? new Date(dateTo + "T23:59:59") : null;
+
+    return rows
+      .filter(r => {
+        if (tx !== "ทั้งหมด" && r.type !== tx) return false;
+        if (from && new Date(r.time) < from) return false;
+        if (to && new Date(r.time) > to) return false;
+
+        if (!s) return true;
+        const bag =
+          `${r.type} ${r.lotNo} ${r.orderNo} ${r.name} ${r.qty} ${r.unit} ${r.note || ""}`.toLowerCase();
+        return bag.includes(s);
+      })
+      .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()); // ใหม่สุดก่อน
+  }, [rows, q, tx, dateFrom, dateTo]);
+
+  const clearFilters = () => {
+    setQ(""); setTx("ทั้งหมด"); setDateFrom(""); setDateTo("");
   };
 
-  const save = () => {
-    if (!form.orderNo.trim() || !form.materialName.trim()) {
-      alert("กรุณากรอกข้อมูลให้ครบ");
-      return;
-    }
-    const newId = Math.max(0, ...rows.map(r => r.id)) + 1;
-    setRows(prev => [...prev, { ...form, id: newId }]);
-    setOpen(false);
+  const exportCSV = () => {
+    const header = [
+      "เวลา", "ประเภท", "เลขล็อต", "เลขคำสั่งผลิต", "ชื่อสินค้า",
+      "จำนวน", "หน่วย", "หมายเหตุ"
+    ];
+    const lines = filtered.map(r => [
+      new Date(r.time).toLocaleString("th-TH"),
+      r.type, r.lotNo, r.orderNo, r.name,
+      r.qty.toString(), r.unit, r.note?.replaceAll("\n", " ") || ""
+    ]);
+    const csv = [header, ...lines].map(line =>
+      line.map(x => `"${(x ?? "").toString().replaceAll('"', '""')}"`).join(",")
+    ).join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "warehouse-history.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const removeAll = () => {
+    if (!confirm("ลบประวัติทั้งหมด?")) return;
+    saveHistory([]);
+    setRows([]);
   };
 
   return (
-    <div className="wh-page">
-      {/* Tabs */}
-      <div className="wh-top">
-        <div className="wh-tabs">
-          <NavLink to="/home/warehouse" end className="tab-link">การจัดสรร</NavLink>
-          <NavLink to="/home/warehouse/warehouse-stock" className="tab-link">คลัง</NavLink>
-        </div>
-        <div className="wh-right-buttons">
-          <button className="btn primary" onClick={openAdd}>+ เพิ่มวัตถุดิบ</button>
-        </div>
+    <div className="ws-page">
+      {/* แท็บนำทาง */}
+      
+      <div className="wh-tabs">
+        <NavLink to="/home/warehouse"end className="tab-link">คลัง</NavLink>
+        <NavLink to="/home/warehouse/warehouse-stock" end className="tab-link">ประวัติการทำรายการ</NavLink>
+      </div>
+      
+
+      <div className="ws-title">ประวัติการทำรายการ</div>
+
+      {/* แถบเครื่องมือค้นหา/กรอง */}
+      <div className="ws-tools">
+        <input
+          className="ws-input"
+          placeholder="ค้นหา: ประเภท/ล็อต/คำสั่ง/ชื่อ/หมายเหตุ"
+          value={q}
+          onChange={(e)=>setQ(e.target.value)}
+        />
+        <select className="ws-input" value={tx} onChange={(e)=>setTx(e.target.value as any)}>
+          <option value="ทั้งหมด">ทั้งหมด</option>
+          <option value="ขาย">ขาย</option>
+          <option value="หมดอายุ">หมดอายุ</option>
+        </select>
+        <input className="ws-input" type="date" value={dateFrom} onChange={e=>setDateFrom(e.target.value)} />
+        <input className="ws-input" type="date" value={dateTo} onChange={e=>setDateTo(e.target.value)} />
+
+        <button className="ws-btn" onClick={clearFilters}>ล้างตัวกรอง</button>
+        <div className="ws-spacer" />
+        <button className="ws-btn outline" onClick={exportCSV}>ส่งออก CSV</button>
+        <button className="ws-btn danger" onClick={removeAll}>ลบทั้งหมด</button>
       </div>
 
-      {/* Toolbar */}
-      <div className="wh-toolbar" style={{ marginTop: 70 }}>
-        <div className="tools-left"><div className="title">คลังสินค้า</div></div>
-      </div>
-
-      {/* Table */}
-      <div className="wh-table">
-        <div className="wh-row wh-head">
-          <div className="th">เลขคำสั่งผลิต</div>
-          <div className="th">ชื่อวัตถุดิบ</div>
-          <div className="th">จำนวนที่ต้องใช้</div>
-          <div className="th">หน่วย</div>
-          <div className="th">สถานะ</div>
-          <div className="th">ผลการตรวจสอบ</div>
-        </div>
-
-        {rows.map(r => {
-          const low = r.status === "ต่ำกว่าขั้นต่ำ";
-          return (
-            <div key={r.id} className={`wh-row ${low ? "low" : ""}`}>
-              <div className="td mono">{r.orderNo}</div>
-              <div className="td">{r.materialName}</div>
-              <div className="td mono">{r.requiredQty.toLocaleString()}</div>
-              <div className="td">{r.unit}</div>
-              <div className="td">{r.status}</div>
-              <div className="td">{r.qa}</div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Modal */}
-      {open && (
-        <>
-          <button className="wh-overlay" aria-label="close" onClick={() => setOpen(false)} />
-          <div className="wh-modal" role="dialog" aria-modal="true">
-            <h3 className="modal-title">เพิ่มวัตถุดิบ</h3>
-            <div className="form-grid">
-              <label>รหัส
-                <input value={form.orderNo} onChange={e => setForm({ ...form, orderNo: e.target.value })} />
-              </label>
-              <label>ชื่อวัตถุดิบ
-                <input value={form.materialName} onChange={e => setForm({ ...form, materialName: e.target.value })} />
-              </label>
-              <label>จำนวนที่ต้องใช้
-                <input type="number" value={form.requiredQty} onChange={e => setForm({ ...form, requiredQty: Number(e.target.value) })} />
-              </label>
-              <label>หน่วย
-                <select value={form.unit} onChange={e => setForm({ ...form, unit: e.target.value })}>
-                  <option>กก.</option>
-                  <option>ลิตร</option>
-                  <option>ชิ้น</option>
-                </select>
-              </label>
-              <label>สถานะ
-                <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value as StockRow["status"] })}>
-                  <option>ปกติ</option>
-                  <option>ต่ำกว่าขั้นต่ำ</option>
-                  <option>รอตรวจสอบ</option>
-                </select>
-              </label>
-              <label>ผลการตรวจสอบ
-                <select value={form.qa} onChange={e => setForm({ ...form, qa: e.target.value as StockRow["qa"] })}>
-                  <option>ผ่าน</option>
-                  <option>ไม่ผ่าน</option>
-                  <option>รอผล</option>
-                </select>
-              </label>
-            </div>
-
-            <div className="modal-actions">
-              <button className="btn ghost" onClick={() => setOpen(false)}>ยกเลิก</button>
-              <button className="btn primary" onClick={save}>บันทึก</button>
-            </div>
+      {/* ตาราง */}
+      <div className="ws-table-wrap">
+        <div className="ws-table">
+          <div className="ws-row ws-head">
+            <div>เวลา</div>
+            <div>ประเภท</div>
+            <div>เลขล็อต</div>
+            <div>เลขคำสั่งผลิต</div>
+            <div>ชื่อสินค้า</div>
+            <div>จำนวน</div>
+            <div>หน่วย</div>
+            <div>หมายเหตุ</div>
           </div>
-        </>
-      )}
+
+          {filtered.map((r, i) => (
+            <div key={r.id} className={`ws-row ws-body ${i % 2 ? "alt" : ""}`}>
+              <div className="mono">{new Date(r.time).toLocaleString("th-TH")}</div>
+              <div className={`pill ${r.type === "ขาย" ? "ok" : "warn"}`}>{r.type}</div>
+              <div className="mono">{r.lotNo}</div>
+              <div className="mono">{r.orderNo}</div>
+              <div>{r.name}</div>
+              <div className="mono">{r.qty.toLocaleString()}</div>
+              <div>{r.unit}</div>
+              <div className="truncate" title={r.note}>{r.note || "-"}</div>
+            </div>
+          ))}
+
+          {filtered.length === 0 && <div className="ws-empty">ไม่พบประวัติ</div>}
+        </div>
+      </div>
     </div>
   );
 }
