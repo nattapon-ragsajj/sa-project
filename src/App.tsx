@@ -9,6 +9,8 @@ import Product from "./product";
 import RawMaterialStock from "./rawMaterialStock"; // ⬅️ เพิ่มบรรทัดนี้
 import WareHouse from "./warehouse";
 import WarehouseStock from "./warehouseStock";
+import QaMaterial from "./qaMaterial";
+import QaProduct from "./qaProduct";
 
 
 
@@ -32,6 +34,8 @@ function App() {
           <Route path="product-page" element={<ProductPage />} />
           {<Route path="material-select" element={<MaterialSelect />} />}
           <Route path="raw-material"    element={<RawMaterial />} />
+          <Route path="qa-material"    element={<QaMaterial />} />
+          <Route path="qa-product"    element={<QaProduct />} />
           <Route path="raw-material/raw-stock" element={<RawMaterialStock />} />
           <Route path="warehouse"       element={<WareHouse />} />
           <Route path="warehouse/warehouse-stock" element={<WarehouseStock />} />

@@ -1,10 +1,14 @@
 /* พื้นหลังลายจุดเบา ๆ + โทนม่วงฟ้า (scope ทั้งหน้า) */
 .product-page{
+   /* background: url("https://t4.ftcdn.net/jpg/04/87/77/31/360_F_487773107_3Ofdhf3Pu0KRQOLYYeR9bvurcDKshD7V.jpg") 
+              no-repeat center center fixed; */
+  background-size: cover;          /* ขยายภาพเต็มหน้าจอ */
+  background-attachment: fixed;    /* พื้นหลังอยู่กับที่เวลาเลื่อน */
   min-height: 100vh;
   padding: 16px 16px 80px;
-  background:
+  /* background:
     radial-gradient(circle at 20% 20%, rgba(0,0,0,.04) 2px, transparent 2px) 0 0/18px 18px,
-    linear-gradient(180deg, #f7f7fb 0%, #eef1ff 100%);
+    linear-gradient(180deg, #f7f7fb 0%, #eef1ff 100%); */
   color:#1b1440;
   box-sizing: border-box;
   font-family: system-ui, Arial, sans-serif;
@@ -36,9 +40,10 @@
   grid-template-columns: 86px 1fr auto;
   align-items: center;
   gap:14px;
-  background: linear-gradient(90deg,#b7b2ff 0%, #9aa5ff 60%, #6e6bff 100%);
+  background: linear-gradient(90deg,#e0ddf9 0%, #9aa5ff 60%, #8482fc 100%);
   padding:14px;
   border-radius: 18px;
+  border: 2px solid #0202b9; 
   box-shadow: 0 8px 24px rgba(71, 61, 255, .18);
 }
 
@@ -86,9 +91,9 @@
 .product-page .btn.primary:active { transform: scale(.95); }
 
 .product-page .btn.ghost{
-  background: #090444; color:#fff;
+  background: #c7c4f1; color:#110234;
 }
-.product-page .btn.ghost:hover{ transform: scale(1.06); background:#c7e5fd; }
+.product-page .btn.ghost:hover{ transform: scale(1.06); background:#08012a; color: #ffffff;}
 .product-page .btn.ghost:active{ transform: scale(.95); }
 
 /* ปุ่มเพิ่มด้านล่าง */
@@ -226,25 +231,25 @@
   gap:16px;
 }
 .edit-block{
-  background:#2f282b;
-  border:1px solid #40373a;
+  background:#bacafc;
+  border:1px solid #2321b9;
   border-radius:12px;
   padding:12px;
 }
 .block-title{
   font-weight:700;
-  color:#fff;
+  color:#030000;
   margin-bottom:8px;
 }
 
 /* inputs ใน modal */
-.modal-label{ display:block; color:#e7e6ea; margin:8px 0 6px; }
+.modal-label{ display:block; color:#eae6e6; margin:8px 0 6px; }
 .modal-input, .modal-textarea, .ing-row select{
   width:100%;
   padding:10px 12px;
   border-radius:10px;
   border:1px solid #524449;
-  background:#3a3135;
+  background:#1a0739;
   color:#f2eceb;
   outline:none;
 }
@@ -259,7 +264,7 @@
   grid-template-columns: 2fr 1fr 1fr .6fr;
   gap:10px;
   font-weight:700;
-  color:#e7e6ea;
+  color:#07001b;
   margin:10px 0 6px;
 }
 .ing-row{
@@ -280,10 +285,13 @@
 }
 
 /* ปุ่มสไตล์ */
-.btn.ghost{ background:#ffffff; color:#2b2b66; border:2px solid #cfcfe8; }
-.btn.ghost:hover{ background:#f7f7fd; border-color:#b8bae8; }
-.btn.danger{ background:#ffebee; color:#b71c1c; border:2px solid #ffcdd2; }
-.btn.danger:hover{ background:#ffcdd2; }
+/* .btn.ghost{ background:#ffffff; color:#2b2b66; border:2px solid #cfcfe8; }
+.btn.ghost:hover{ background:#f7f7fd; border-color:#b8bae8; } */
+.btn.danger{ background:#ffebee; color:#b71c1c; border:2px solid #ffcdd2;transition: transform .12s ease, background .12s ease, color .12s ease, border-color .12s ease; }
+.btn.danger:hover{transform: scale(1.03); background:#ffcdd2; color:#b71c1c ; }
+.btn.danger:active{ transform: scale(.97);background:#b71c1c;color:#ffecec;border-color:#b71c1c; }
+/* .product-page .add-btn:hover{ transform: scale(1.03); color:#eeecec; background: #020202; border: 2px solid white; }
+.product-page .add-btn:active{ transform: scale(.97); } */
 
 
 /* เฉพาะปุ่มในการ์ด */
@@ -305,6 +313,67 @@
   width: max-content;    /* กว้างเท่าที่ปุ่มต้องการ ไม่ดันการ์ด */
 }
 
+/* === ปุ่มลบ: พื้นแดงอ่อนปกติ → แดงเข้มตอน hover === */
+.product-page .btn.danger {
+  background: #ffebee;         /* พื้นแดงอ่อน */
+  color: #b71c1c;              /* ตัวอักษรแดงเข้ม */
+  border: 2px solid #ffcdd2;
+  transition: transform .12s ease,
+              background .12s ease,
+              color .12s ease,
+              border-color .12s ease;
+}
+
+/* ตอนชี้เมาส์ */
+.product-page .btn.danger:hover {
+  transform: scale(1.06);
+  background: #8d0303;         /* พื้นแดงเข้ม */
+  color: #ffffff;              /* ตัวอักษรขาว */
+  border-color: #8d0303;
+}
+
+/* ตอนกดค้าง */
+.product-page .btn.danger:active {
+  transform: scale(.95);
+  background: #b71c1c;         /* เข้มขึ้นอีก */
+  color: #ffecec;              /* ตัวอักษรขาวอมชมพู */
+  border-color: #b71c1c;
+}
+
+/* โฟกัสด้วยคีย์บอร์ด */
+.product-page .btn.danger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(211,47,47,.35);
+}
+
+
+/* === ปุ่ม "เพิ่มวัตถุดิบ" === */
+.product-page .btn.outline {
+  background: #f2efff;           /* พื้นหลังม่วงอ่อน */
+  color: #1c0a6c;                /* ตัวอักษรม่วงเข้ม */
+  border: 2px solid #221b51;     /* เส้นขอบม่วงสด */
+  border-radius: 10px;
+  transition: transform .12s ease,
+              background .12s ease,
+              color .12s ease,
+              border-color .12s ease;
+}
+
+/* ตอนชี้เมาส์ */
+.product-page .btn.outline:hover {
+  transform: scale(1.06);
+  background: #060038;           /* พื้นหลังม่วงเข้มขึ้น */
+  color: #ffffff;                /* ตัวอักษรขาว */
+  border-color: #cfcaff;
+}
+
+/* ตอนกดค้าง */
+.product-page .btn.outline:active {
+  transform: scale(.95);
+  background: #3c2cb6;           /* เข้มสุด */
+  color: #f5f3ff;
+  border-color: #3c2cb6;
+}
 
 /* มือถือ */
 @media (max-width: 900px){

@@ -104,3 +104,8 @@ body{ margin:0; font-family: Arial, sans-serif; background:#fff; color:#000; }
 
 /* ขวาบาร์ */
 .right-menu{ display:flex; align-items:center; gap:10px; }
+
+/* home.css — เพิ่มกติกา caret ให้หมุนเมื่อปุ่มมี .active */
+.nav-link.has-caret.active::after{
+  transform: translateY(-60%) rotate(180deg); /* เปิดแล้วชี้ขึ้น */
+}

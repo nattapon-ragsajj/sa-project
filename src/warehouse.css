@@ -1,6 +1,8 @@
 /* พื้นหลัง + ฟอนต์ */
 .wh-page{
-  background:#f3f4f7;
+  /* background: url("https://t4.ftcdn.net/jpg/04/87/77/31/360_F_487773107_3Ofdhf3Pu0KRQOLYYeR9bvurcDKshD7V.jpg") 
+              no-repeat center center fixed; */
+  /* background:#f3f4f7; */
   min-height:100vh;
   padding:16px;
   color:#1b1440;
@@ -59,8 +61,9 @@
   position:fixed; z-index:2001;
   left:50%; top:50%; transform:translate(-50%,-50%);
   width:min(980px, 94vw); min-height:360px;
-  background:#0c2a78; border-radius:28px; padding:28px;
+  background:#02123a; border-radius:28px; padding:28px;
   display:grid; grid-template-columns: 1fr 1.2fr; gap:24px;
+  border: 2px solid #cfe8ff ;
   color:#fff;
   box-shadow:0 24px 32px rgba(0,0,0,.35);
 }
@@ -75,9 +78,10 @@
 .sheet-right{ display:flex; justify-content:center; align-items:flex-start; }
 .form-card{
   width:100%;
-  background:#d9d0ff; color:#0e1b4d;
+  background: linear-gradient(90deg,#e0ddf9 0%, #9aa5ff 60%, #8482fc 100%);
+  color: #1f1f25;
   border-radius:22px; padding:18px 18px 16px;
-  box-shadow: inset 0 0 0 2px rgba(255,255,255,.35);
+  box-shadow: inset 0 0 0 2px rgba(149, 225, 255, 0.35);
 }
 .form-card h3{ margin:0 0 10px; text-align:center; color:#0e1b4d; }
 .inline{ display:grid; grid-template-columns: 1fr auto auto; align-items:center; gap:10px; margin:10px 0; }
@@ -86,7 +90,7 @@
   border:1px solid #bcb6ef; border-radius:10px; padding:10px 12px; background:#fff;
 }
 .form-card textarea{ resize:vertical; }
-.unit{ opacity:.8; }
+.unit{ opacity:.8;color: #000000; }
 
 /* ปุ่มสลับประเภท */
 .seg{ display:inline-flex; gap:8px; }

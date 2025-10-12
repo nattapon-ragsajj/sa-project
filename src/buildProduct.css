@@ -10,6 +10,7 @@
 
 /* ==== Container (ขยายความกว้าง) ==== */
 .build-wrapper{
+  
   width: 100%;
   max-width: 1400px;   /* ⬅️ ปรับได้: 1400/1600 หรือ 100% ถ้าอยากเต็มจอ */
   margin: 0 auto;
@@ -58,8 +59,8 @@
 .card > .section:last-of-type{ margin-bottom: 0; }
 
 /* Labels & Inputs */
-.label{ display:block;text-align: left ; font-size:14px; color:#e7e6ea; margin-bottom:6px; }
-.req{ color:#ffb3b7; }
+.label{ display:block;text-align: left ; font-size:14px; color:#100336; margin-bottom:6px; }
+.req{ color:#ff000d; }
 
 .input, .select, .textarea{
   text-align: left;
@@ -67,7 +68,7 @@
   padding: 12px 14px;
   border-radius: 10px;
   border: 1px solid #524449;
-  background: #3a3135;
+  background: #32313a;
   color: #f2eceb;
   outline: none;
 }
@@ -78,14 +79,14 @@
 }
 
 .is-invalid{
-  border-color:#e27a82 !important;
+  border-color:#6d53f1 !important;
   box-shadow:0 0 0 3px rgba(226,122,130,.22);
 }
-.field-error{ margin-top:6px; font-size:12px; color:#ffb3b7; }
+.field-error{ margin-top:6px; font-size:12px; color:#290cbb; }
 
 /* ==== Grid แถววัตถุดิบ (ขยายคอลัมน์ชื่อให้กว้าง) ==== */
 .row.header{
-  font-size:13px; color:#cccbd6;
+  font-size:13px; color:#100336;
   padding:4px 2px 10px;
   border-bottom:1px dashed #4a4044;
   margin-bottom:8px;
@@ -117,12 +118,12 @@
 .btn.primary{ background:#7c9c6f; }
 .btn.primary:hover{ background:#8aac7e; }
 
-.btn.outline{
-  background: transparent;
-  border-color: #6a5b5f;
-  color: #e7dfdd;
+.bp .btn.outline{
+  background: #f2efff;
+  border: 2px solid #170142;
+  color: #0b0200;
 }
-.btn.outline:hover{ background:#463b3f; }
+
 
 .btn.ghost{
   background: transparent;
@@ -136,13 +137,13 @@
   display:flex; align-items:center; gap:12px;
   justify-content:flex-start; margin-top:12px;
 }
-.hint{ font-size:12px; color:#c9bcbc; }
+.hint{ font-size:12px; color:#ff000d; }
 
 /* Alerts */
 .alert{
   border-radius:12px; padding:12px 14px; margin-bottom:14px; border:1px solid;
 }
-.alert.error{ background:#3b2a2d; border-color:#74454c; color:#ffd6da; }
+.alert.error{ background:#000000; border-color:#330e7e; color:#d1d2ff; }
 .alert.success{ background:#2e3a2f; border-color:#4b6b50; color:#dcffe3; }
 .alert-title{ font-weight:700; margin-bottom:6px; }
 .alert-list{ margin:0; padding-left:18px; }
@@ -194,8 +195,9 @@ label[for="recipeName"] {
 
 /* 2) ให้ทุก .section เป็น “กล่อง” แยกกัน */
 .card > .section{
-  background: #2f282b;              /* พื้นหลังกล่อง */
-  border: 1px solid #40373a;
+    background: linear-gradient(90deg,#e0ddf9 0%, #9aa5ff 60%, #8482fc 100%);
+              /* พื้นหลังกล่อง */
+  border: 1px solid #220088;
   border-radius: 14px;
   padding: 16px;
   margin: 0;                        /* ใช้ gap จาก grid แทน */
@@ -221,6 +223,34 @@ label[for="recipeName"]{
 #recipeName{
   width:100%;
   text-align:left;
+}
+
+/* === ปุ่ม "เพิ่มวัตถุดิบ" === */
+.pb .btn.outline {
+  background: #f2efff;           /* พื้นหลังม่วงอ่อน */
+  color: #1c0a6c;                /* ตัวอักษรม่วงเข้ม */
+  border: 2px solid #221b51;     /* เส้นขอบม่วงสด */
+  border-radius: 10px;
+  transition: transform .12s ease,
+              background .12s ease,
+              color .12s ease,
+              border-color .12s ease;
+}
+
+/* ตอนชี้เมาส์ */
+.bp .btn.outline:hover {
+  transform: scale(1.06);
+  background: #060038;           /* พื้นหลังม่วงเข้มขึ้น */
+  color: #ffffff;                /* ตัวอักษรขาว */
+  border-color: #060038;
+}
+
+/* ตอนกดค้าง */
+.bp .btn.outline:active {
+  transform: scale(.95);
+  background: #3c2cb6;           /* เข้มสุด */
+  color: #f5f3ff;
+  border-color: #3c2cb6;
 }
 
 /* 5) มือถือ/จอแคบ → 1 คอลัมน์ตามเดิม */

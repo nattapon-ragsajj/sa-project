@@ -5,9 +5,23 @@ import "./home.css";
 
 export default function Home() {
   const [storeOpen, setStoreOpen] = useState(false);
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [qcOpen, setQcOpen] = useState(false);
+
+  const storeBtnRef = useRef<HTMLButtonElement>(null);
+  const qcBtnRef = useRef<HTMLButtonElement>(null);
 
   const navigate = useNavigate();
+
+  // ปิดทุก dropdown เมื่อกด back/forward
+  useEffect(() => {
+    const closeAll = () => { setStoreOpen(false); setQcOpen(false); };
+    window.addEventListener("popstate", closeAll);
+    return () => window.removeEventListener("popstate", closeAll);
+  }, []);
+
+  // helper: เปิดอันหนึ่งต้องปิดอีกอัน
+  const toggleStore = () => { setStoreOpen(v => !v); setQcOpen(false); };
+  const toggleQc    = () => { setQcOpen(v => !v);   setStoreOpen(false); };
 
   return (
     <div className="layout">
@@ -20,23 +34,36 @@ export default function Home() {
           <NavLink to="product-page" className="nav-link">สินค้า</NavLink>
           <NavLink to="product" className="nav-link">ผลิตสินค้า</NavLink>
 
-
-          {/* ===== ปุ่ม "คลัง" + PortalDropdown ===== */}
+          {/* ===== ดรอปดาวน์: คลัง ===== */}
           <div className="menu-item">
             <button
-              ref={triggerRef}
+              ref={storeBtnRef}
               type="button"
               className={`nav-link has-caret ${storeOpen ? "active" : ""}`}
               aria-haspopup="menu"
               aria-expanded={storeOpen}
-              onClick={() => setStoreOpen(v => !v)}
+              onClick={toggleStore}
             >
               คลัง
             </button>
           </div>
 
           <NavLink to="production-order" className="nav-link">รายการสั่งซื้อสินค้า</NavLink>
-          <NavLink to="q-control" className="nav-link">ควบคุมคุณภาพสินค้า</NavLink>
+
+          {/* ===== ดรอปดาวน์: คุณภาพ ===== */}
+          <div className="menu-item">
+            <button
+              ref={qcBtnRef}
+              type="button"
+              className={`nav-link has-caret ${qcOpen ? "active" : ""}`}
+              aria-haspopup="menu"
+              aria-expanded={qcOpen}
+              onClick={toggleQc}
+            >
+              ควบคุมคุณภาพ
+            </button>
+          </div>
+
           <NavLink to="sales-list" className="nav-link">รายการขายสินค้า</NavLink>
         </nav>
 
@@ -49,11 +76,11 @@ export default function Home() {
         <Outlet />
       </main>
 
-      {/* กล่องดรอปดาวน์แบบ Portal (ลอยบนสุด ตำแหน่งตามปุ่ม) */}
+      {/* ===== Dropdown ของ "คลัง" ===== */}
       <PortalDropdown
         open={storeOpen}
         onClose={() => setStoreOpen(false)}
-        anchorRef={triggerRef}
+        anchorRef={storeBtnRef}
       >
         <button className="dropdown-link" onClick={() => { setStoreOpen(false); navigate("warehouse"); }}>
           คลังสินค้า
@@ -62,11 +89,26 @@ export default function Home() {
           คลังวัตถุดิบ
         </button>
       </PortalDropdown>
+
+      {/* ===== Dropdown ของ "ควบคุมคุณภาพ" ===== */}
+      <PortalDropdown
+        open={qcOpen}
+        onClose={() => setQcOpen(false)}
+        anchorRef={qcBtnRef}
+      >
+        {/* ปรับเส้นทางตาม route ที่มีในโปรเจ็กต์จริงของคุณได้เลย */}
+        <button className="dropdown-link" onClick={() => { setQcOpen(false); navigate("qa-product"); }}>
+          ควบคุมคุณภาพสินค้า
+        </button>
+        <button className="dropdown-link" onClick={() => { setQcOpen(false); navigate("qa-material"); }}>
+          ควบคุมคุณภาพวัตถุดิบ
+        </button>
+      </PortalDropdown>
     </div>
   );
 }
 
-/* ===== Component: PortalDropdown ===== */
+/* ===== Component: PortalDropdown (เหมือนเดิม) ===== */
 function PortalDropdown({
   open,
   onClose,
@@ -81,28 +123,23 @@ function PortalDropdown({
   const boxRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{top: number; left: number; width: number}>({top: 0, left: 0, width: 0});
 
-  // คำนวณพิกัดใต้ปุ่ม
   const place = () => {
     const el = anchorRef.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
     setPos({
-      top: r.bottom + window.scrollY + 8,       // 8px ระยะห่าง
+      top: r.bottom + window.scrollY + 8,
       left: r.left + window.scrollX,
       width: r.width,
     });
   };
 
-  useLayoutEffect(() => {
-    if (!open) return;
-    place();
-  }, [open]);
+  useLayoutEffect(() => { if (open) place(); }, [open]);
 
   useEffect(() => {
     if (!open) return;
     const onWin = () => place();
     const onDown = (e: MouseEvent) => {
-      // ปิดเมื่อคลิกนอก
       if (boxRef.current && !boxRef.current.contains(e.target as Node) &&
           anchorRef.current && !anchorRef.current.contains(e.target as Node)) {
         onClose();
@@ -120,7 +157,6 @@ function PortalDropdown({
 
   if (!open) return null;
 
-  // กล่องจริงถูกวางบน body (ไม่โดนตัด)
   return createPortal(
     <div
       ref={boxRef}
@@ -135,7 +171,7 @@ function PortalDropdown({
         borderRadius: 10,
         padding: 8,
         boxShadow: "0 12px 24px rgba(0,0,0,.28)",
-        zIndex: 99999,  // สูงพอแน่นอน
+        zIndex: 99999,
       }}
     >
       {children}

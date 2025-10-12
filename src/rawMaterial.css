@@ -1,8 +1,10 @@
 /* หน้า + โทนสีอ่อน (พื้นหลังเทาอ่อนตามภาพ) */
 .rm-page{
+  /* background: url("https://t4.ftcdn.net/jpg/04/87/77/31/360_F_487773107_3Ofdhf3Pu0KRQOLYYeR9bvurcDKshD7V.jpg") 
+              no-repeat center center fixed; */
   min-height:100vh;
   padding:16px;
-  background:#f3f4f7;
+  /* background:#f3f4f7; */
   color:#1b1440;
   box-sizing:border-box;
   font-family: system-ui, Arial, sans-serif;

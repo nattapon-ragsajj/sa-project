@@ -12,7 +12,7 @@ function Login() {
   const handleLogin = () => { 
     if (username === "admin" && password === "1234") {
       setMessage("✅ Login สำเร็จ! ยินดีต้อนรับ " + username);
-      navigate("/Home"); // ไปหน้า Home
+      navigate("/home/product"); // ไปหน้า Home
     } else {
       setMessage("❌ Login ไม่สำเร็จ! กรุณาลองใหม่");
     }

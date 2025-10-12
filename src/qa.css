@@ -1,0 +1,88 @@
+/* qaProduct.css */
+.qa-page{
+  min-height:100vh;
+  padding:16px;
+  /* background:#f3f4f7; */
+  color:#1b1440;
+  font-family: system-ui, Arial, sans-serif;
+  box-sizing:border-box;
+}
+
+/* แถบเม็ดกลมด้านบน */
+.qa-topbar{ background:#2b0c6b; padding:18px 16px; border-radius:8px; }
+.pill-tabs{ display:flex; gap:24px; justify-content:center; }
+.pill{
+  background:#e6e0ff; color:#1b1440; font-weight:800;
+  padding:14px 36px; border-radius:20px; min-width:160px; text-align:center;
+}
+.pill.active{ background:#d1c4ff; box-shadow:inset 0 0 0 3px #39108a; }
+
+/* เนื้อหา */
+.qa-body{ background:#fff; margin-top:14px; border-radius:8px; padding:20px; }
+.qa-title{ margin:0 0 14px; font-size:1.2rem;margin-bottom: 60px; }
+
+/* แท็บย่อย */
+.qa-tabs{ display:flex; gap:8px; margin-bottom:12px; }
+.qa-tab{
+  border:none; cursor:pointer; padding:6px 12px; border-radius:8px;
+  background:#e9e9f5; color:#2b2b66; font-weight:700; font-size:.9rem;
+}
+.qa-tab.active{ background:#2b2b66; color:#fff; }
+
+/* ตารางหลัก */
+.qa-table-wrap{ overflow:auto; border-radius:8px; }
+.qa-table{
+  width:100%; border-collapse:separate; border-spacing:0;
+  background:#3a3a3a; color:#eaeaea; border-radius:8px; overflow:hidden;
+}
+.qa-table thead th{
+  position:sticky; top:0; background:#2f2f2f; color:#fff;
+  font-weight:700; text-align:left; padding:10px; z-index:2;
+}
+.qa-table td{ padding:12px 10px; border-top:1px solid #4a4a4a; }
+.qa-table tr.clickable{ cursor:pointer; }
+.qa-table tr.clickable:hover{ background:#454545; }
+.num{ text-align:right; }
+
+/* Pop-up */
+.no-scroll{ overflow:hidden; }
+.qa-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.5);
+  display:flex; justify-content:center; align-items:center;
+  z-index: 100000; /* สูงมาก เพื่อไม่โดนหัวตารางทับ */
+}
+.qa-modal{
+  position:relative; width:min(920px, 85vw); background:#efefef;
+  border-radius:20px; padding:28px 24px 24px;
+  box-shadow: 0 16px 40px rgba(0,0,0,.35);
+}
+.qa-close{
+  position:absolute; top:10px; right:10px; border:none; background:#fff;
+  width:32px; height:32px; border-radius:8px; cursor:pointer; font-size:16px;
+}
+
+/* กล่องตัวเลือกผ่าน/ไม่ผ่าน */
+.qa-judge-card{
+  margin:0 auto 18px; width:240px; background:#fff; border-radius:14px;
+  padding:16px; display:flex; flex-direction:column; gap:10px; align-items:center;
+}
+.qa-radio label{ display:flex; gap:8px; align-items:center; font-weight:700; }
+.qa-confirm{
+  margin-top:6px; border:none; padding:8px 16px; border-radius:999px; cursor:pointer;
+  background:#1e1e1e; color:#fff; font-weight:800;
+}
+
+/* ประวัติใน modal */
+.qa-subtitle{ margin:8px 0 8px 6%; }
+.qa-history-wrap{ display:flex; justify-content:center; }
+.qa-history{
+  width:88%; border-collapse:separate; border-spacing:0;
+  background:#3a3a3a; color:#eaeaea; border-radius:8px; overflow:hidden;
+}
+.qa-history thead th{
+  background:#2f2f2f; color:#fff; font-weight:700; text-align:left; padding:10px;
+}
+.qa-history td{ padding:10px; border-top:1px solid #4a4a4a; }
+.qa-history td.ok{ color:#b6ffb6; font-weight:800; }
+.qa-history td.ng{ color:#ffd0d0; font-weight:800; }
+.muted{ text-align:center; color:#cfcfcf; }

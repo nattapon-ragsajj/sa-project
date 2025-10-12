@@ -273,12 +273,12 @@ export default function ProductPage() {
   return (
     <div className="product-page">
       {/* Header */}
-      <header className="produce-header">
+      {/* <header className="produce-header">
         <button className="back-btn" aria-label="ย้อนกลับ" onClick={() => navigate(-1)}>
           ←
         </button>
         <h1>ผลิตสินค้า</h1>
-      </header>
+      </header> */}
 
       {/* ปุ่มเพิ่ม */}
       <div className="add-wrap">

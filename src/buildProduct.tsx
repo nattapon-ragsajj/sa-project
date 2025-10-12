@@ -185,7 +185,7 @@ export default function BuildProduct() {
   }
 
   return (
-    <div className="build-wrapper">
+    <div className="build-wrapper bp">
       <div className="page-title">
         บันทึกสูตรใหม่
         <span className="page-subtitle">สร้างสูตรสินค้าและกำหนดส่วนผสม</span>
@@ -306,7 +306,7 @@ export default function BuildProduct() {
               </div>
             );
           })}
-
+        
           <div className="row">
             <div className="col col-add">
               <button type="button" className="btn outline" onClick={addRow}>
