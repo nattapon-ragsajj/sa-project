@@ -8,6 +8,7 @@ interface Item {
   no: string;
   status: string;
   date: string;
+  name?: string; 
 }
 
 
@@ -56,11 +57,11 @@ export default function Product() {
       </header>
 
       {/* ปุ่มเพิ่มด้านล่าง */}
-      <div className="add-wrap">
+      {/* <div className="add-wrap">
         <button className="add-btn" onClick={() => navigate("/home/product")}>
           + สร้างคำสั่งผลิต
         </button>
-      </div>
+      </div> */}
 
       {/* รายการการ์ดสินค้า */}
       <div className="cards">

@@ -69,7 +69,7 @@ export default function ProductPage() {
   }, []);
 
   /** ====== Modal แก้ไขสินค้า + สูตร ====== */
-  const [openEdit, setOpenEdit] = useState(false);
+  const [_openEdit, _setOpenEdit] = useState(false);
 
   // สินค้าที่กำลังแก้
   const [editing, setEditing] = useState<Item | null>(null);
@@ -120,11 +120,11 @@ export default function ProductPage() {
     }
 
     setRecipeErrors([]);
-    setOpenEdit(true);
+    _setOpenEdit(true);
   }
 
   function closeEditModal() {
-    setOpenEdit(false);
+    _setOpenEdit(false);
     setEditing(null);
     setEditName("");
     setEditGroup("");
@@ -331,7 +331,7 @@ export default function ProductPage() {
       </div>
 
       {/* ===== Modal แก้ไขสินค้า + สูตร ===== */}
-      <Modal open={openEdit} onClose={closeEditModal}>
+      <Modal open={_openEdit} onClose={closeEditModal}>
         <h3 className="modal-title">แก้ไขสินค้า & สูตร</h3>
 
         {/* ถ้า “ไม่เจอสูตรตามชื่อ” ให้เลือกแนบสูตรจากรายการทั้งหมด */}

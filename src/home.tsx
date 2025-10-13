@@ -7,8 +7,8 @@ export default function Home() {
   const [storeOpen, setStoreOpen] = useState(false);
   const [qcOpen, setQcOpen] = useState(false);
 
-  const storeBtnRef = useRef<HTMLButtonElement>(null);
-  const qcBtnRef = useRef<HTMLButtonElement>(null);
+  const storeBtnRef = useRef<HTMLButtonElement | null>(null);
+  const qcBtnRef = useRef<HTMLButtonElement | null>(null);
 
   const navigate = useNavigate();
 
@@ -117,7 +117,7 @@ function PortalDropdown({
 }: {
   open: boolean;
   onClose: () => void;
-  anchorRef: React.RefObject<HTMLElement>;
+  anchorRef: React.RefObject<HTMLElement | null>;
   children: React.ReactNode;
 }) {
   const boxRef = useRef<HTMLDivElement>(null);
