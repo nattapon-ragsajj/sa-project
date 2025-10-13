@@ -131,6 +131,11 @@
   color:#2b2b66;
   font-weight:700;
   font-size:.9rem;
+  border: 2px solid #f5f4f7;           /* เพิ่มไว้เพื่อเล่นสีตอน hover */
+  transition: transform .12s ease,          /* ลื่นขึ้น */
+              background .12s ease,
+              color .12s ease,
+              border-color .12s ease;
 }
 
 
@@ -138,8 +143,28 @@
 .tab-link.active,
 .tab-link[aria-current="page"]{
   background:#2b2b66;
+  border:2px solid #000000;
   color:#fff;
 }
+
+.wh-tabs .tab-link:hover,
+.wh-tabs .tab-link:focus-visible{
+  transform: scale(1.06);
+  background: #060038;
+  color: #ffffff;
+  border: 2px solid #7bacff;
+  /* border-color: #060038; */
+  outline: none;
+}
+
+/* ให้สถานะ active ยังดูเด่นแม้ hover อยู่ */
+.wh-tabs .tab-link.active:hover,
+.wh-tabs .tab-link[aria-current="page"]:hover{
+  background:#1a0038;
+  border-color:#1a0038;
+  color:#fff;
+}
+
 .ws-tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
 .ws-input {
   height: 36px; padding: 0 10px; border: 1px solid #d7dbe3; border-radius: 8px; background: #fff; min-width: 180px;

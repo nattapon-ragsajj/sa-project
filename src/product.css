@@ -2,9 +2,9 @@
 .produce-page{
   min-height: 100vh;
   padding: 16px 16px 80px;
-  background:
+  /* background:
     radial-gradient(circle at 20% 20%, rgba(0,0,0,.04) 2px, transparent 2px) 0 0/18px 18px,
-    linear-gradient(180deg, #f7f7fb 0%, #eef1ff 100%);
+    linear-gradient(180deg, #f7f7fb 0%, #eef1ff 100%); */
   color:#1b1440;
   box-sizing: border-box;
   font-family: system-ui, Arial, sans-serif;

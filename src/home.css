@@ -94,7 +94,7 @@ body{ margin:0; font-family: Arial, sans-serif; background:#fff; color:#000; }
   transition: background .15s;
 }
 .dropdown-link:hover,
-.dropdown-link:focus-visible{ background:#3a3a3a; outline:none; }
+.dropdown-link:focus-visible{ background:#959ff2; outline:none; }
 
 /* โฟกัสปุ่มเมนูหลัก */
 .nav-link:focus-visible{

@@ -19,10 +19,14 @@
 }
 .rm-tabs{ display:flex; gap:8px; }
 .tab{
-  border:none; cursor:pointer; padding:6px 12px; border-radius:6px;
+  border:none; cursor:pointer; padding:6px 12px; border-radius:8px;
   background:#e9e9f5; color:#2b2b66; font-weight:700; font-size:.9rem;
+  border:1px solid transparent;
+  transition: transform .12s ease, background .12s ease, color .12s ease, border-color .12s ease;
 }
-.tab.active{ background:#2b2b66; color:#fff; }
+
+
+
 .rm-right-buttons{
   display:flex; flex-direction:column; gap:8px;
 }
@@ -132,19 +136,39 @@
   color:#2b2b66;
   font-weight:700;
   font-size:.9rem;
+  border:1px solid transparent;                      /* เก็บความหนาไว้ */
+  transition: transform .12s ease, background .12s ease, color .12s ease, border-color .12s ease;
 }
+.tab-link:hover,
+.tab-link:focus-visible{
+  transform: scale(1.06);
+  background:#060038;
+  color:#fff;
+  border-color:#7bacff;
+  outline:none;
+}
+
 .tab-link.active,
-.tab-link[aria-current="page"]{
+.tab-link[aria-current="page"],
+.tab-link[aria-selected="true"]{
   background:#2b2b66;
   color:#fff;
+  border-color:#2b2b66;
+}
+
+.tab-link.active:hover,
+.tab-link[aria-current="page"]:hover,
+.tab-link[aria-selected="true"]:hover{
+  background:#1a0038;
+  border-color:#1a0038;
 }
 
 /* ปุ่มใต้ตาราง ชิดขวา */
-.rm-footer-actions {
+/* .rm-footer-actions {
   display: flex;
   justify-content: flex-end;
   margin-top: 12px;
-}
+} */
 
 /* สีแถวกรณีไม่พอ (ใช้ class "low") */
 .rm-row.low {
