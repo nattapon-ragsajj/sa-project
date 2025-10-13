@@ -33,6 +33,8 @@ export default function Product() {
     setOpen(true);
   };
 
+  void handleCreateProductClick;   // บรรทัดนี้ช่วยให้ถือว่า "ได้ใช้งาน" ตัวแปร
+
   const handleConfirm = () => {
     if (!quantity || isNaN(Number(quantity)) || Number(quantity) <= 0) {
       setError("กรุณากรอกจำนวนที่ถูกต้อง");

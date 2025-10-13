@@ -270,6 +270,8 @@ export default function ProductPage() {
     loadItemsFromStorage();
   }
 
+  void removeItemAndRecipe;
+
   return (
     <div className="product-page">
       {/* Header */}

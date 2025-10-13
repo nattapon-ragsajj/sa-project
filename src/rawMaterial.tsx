@@ -81,8 +81,12 @@ export default function RawMaterial() {
     setData(prev => prev.filter(d => d.id !== id));
   };
 
+    
   const openPO = () => setPoOpen(true);
   const closePO = () => setPoOpen(false);
+
+  void remove;
+  void setEditing;
 
   // ตัวอย่าง "อัปเดตคลัง" — เปลี่ยนรายการที่ไม่พอให้เป็น "พอ" แล้วปิดใบ
   const confirmUpdateStock = () => {

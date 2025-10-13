@@ -16,6 +16,13 @@ export default function MaterialSelect() {
       </div>
     );
   }
+  type BomItem = {
+  id: string;
+  name: string;
+  unit: string;
+  perUnit: number;
+  required: number;
+};
 
   // ตัวอย่าง: สูตรวัตถุดิบต่อ 1 หน่วยสินค้า (mock)
   const bom = useMemo(() => [
@@ -24,17 +31,29 @@ export default function MaterialSelect() {
     { id: "MAT-03", name: "น้ำตาล",  unit: "g", perUnit: 15 },
   ], []);
 
+
+  const initial: BomItem[] = bom.map(m => ({
+  ...m,
+  required: m.perUnit * baseQty,
+}));
   // คำนวณจำนวนที่ต้องใช้ตาม baseQty
-  const initial = bom.map(m => ({
-    ...m,
-    required: m.perUnit * baseQty,
-  }));
+  // const initial = bom.map(m => ({
+  //   ...m,
+  //   required: m.perUnit * baseQty,
+  // }));
 
-  const [materials, setMaterials] = useState(initial);
+  const [materials, setMaterials] = useState<BomItem[]>(initial);
+  
+  const updateRequired = (id: string, val: number | string) => {
+  const n = Number(val);
+  setMaterials(prev =>
+    prev.map(m => (m.id === id ? { ...m, required: Number.isFinite(n) ? n : 0 } : m))
+  );
+};
 
-  const updateRequired = (id, val) => {
-    setMaterials(prev => prev.map(m => m.id === id ? { ...m, required: Number(val) || 0 } : m));
-  };
+  // const updateRequired = (id, val) => {
+  //   setMaterials(prev => prev.map(m => m.id === id ? { ...m, required: Number(val) || 0 } : m));
+  // };
 
   const handleSubmit = () => {
     // TODO: ส่งข้อมูล materials ไป backend เพื่อจอง/ตัดสต็อก
@@ -77,7 +96,9 @@ export default function MaterialSelect() {
                 type="number"
                 min="0"
                 value={m.required}
-                onChange={(e) => updateRequired(m.id, e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                updateRequired(m.id, e.target.value)
+                }
                 className="ms-input"
               />
               <span className="unit">{m.unit}</span>
