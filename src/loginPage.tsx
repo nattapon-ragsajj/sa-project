@@ -9,14 +9,12 @@ function Login() {
   const [message, setMessage] = useState("");
   const navigate = useNavigate(); // ใช้เปลี่ยนหน้า
 
-  const handleLogin = () => { 
-    if (username === "admin" && password === "1234") {
-      setMessage("✅ Login สำเร็จ! ยินดีต้อนรับ " + username);
-      navigate("/home/product"); // ไปหน้า Home
-    } else {
-      setMessage("❌ Login ไม่สำเร็จ! กรุณาลองใหม่");
-    }
-  };
+  const handleLogin = () => {
+  if (username === "prod" && password === "1234") navigate("/production");
+  else if (username === "wh" && password === "1234") navigate("/warehouse");
+  else if (username === "qa" && password === "1234") navigate("/qa");
+  else setMessage("❌ Login ไม่สำเร็จ");
+};
 
   return (
     <div className="fullscreen">

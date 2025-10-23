@@ -189,7 +189,7 @@ label[for="recipeName"] {
   padding: 0;
 
   display: grid;
-  grid-template-columns: 1fr 1fr;   /* จอใหญ่: 2 คอลัมน์ */
+  grid-template-columns: 1fr;   /* จอใหญ่: 1 คอลัมน์เต็มความกว้าง */
   gap: 16px;
 }
 
@@ -203,10 +203,7 @@ label[for="recipeName"] {
   margin: 0;                        /* ใช้ gap จาก grid แทน */
 }
 
-/* 3) จัด span กล่องที่ควรเต็มแถว */
-.card > .section:nth-of-type(2){     /* ตารางวัตถุดิบ = กล่องที่ 2 ใน TSX */
-  grid-column: 1 / -1;               /* กินเต็มความกว้าง (2 คอลัมน์) */
-}
+/* 3) จัด span กล่องที่ควรเต็มแถว - ไม่จำเป็นแล้วเพราะใช้ 1 คอลัมน์ */
 .card > .footer{
   grid-column: 1 / -1;               /* ปุ่มบันทึกอยู่เต็มความกว้างด้านล่าง */
   background: transparent;
@@ -253,7 +250,4 @@ label[for="recipeName"]{
   border-color: #3c2cb6;
 }
 
-/* 5) มือถือ/จอแคบ → 1 คอลัมน์ตามเดิม */
-@media (max-width: 900px){
-  .card{ grid-template-columns: 1fr; }
-}
+/* 5) มือถือ/จอแคบ → ใช้ 1 คอลัมน์เหมือนเดิม (ไม่ต้องเปลี่ยน) */

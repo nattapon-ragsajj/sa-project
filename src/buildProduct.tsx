@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import "./buildProduct.css";
+import { useProducts } from "./context/ProductContext";
+
 
 /**
  * หน้านี้ทำเฉพาะ "บันทึกสูตรใหม่"
@@ -43,6 +45,7 @@ export default function BuildProduct() {
   const [errors, setErrors] = useState<string[]>([]);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [savedToast, setSavedToast] = useState<string>("");
+  const { products, setProducts } = useProducts();
 
   // หน่วยให้เลือก (ปรับเพิ่ม/ลดได้ตามต้องการ)
   const unitOptions = useMemo(() => ["g", "kg", "ml", "L", "ชิ้น"], []);
@@ -147,10 +150,29 @@ export default function BuildProduct() {
   }
 
   function handleSave() {
+    
     setSavedToast("");
     const v = validate();
     setErrors(v.errors);
     setFieldErrors(v.fieldErrors);
+    // เพิ่มเข้า global_products ถ้ายังไม่มีสินค้าเดียวกัน
+setProducts((prev) => {
+  const exists = prev.some(
+    (p) => p.name.trim().toLowerCase() === recipeName.trim().toLowerCase()
+  );
+  if (exists) return prev;
+  const newItem = {
+    id: Date.now(),
+    code: `P${String(prev.length + 1).padStart(3, "0")}`,
+    name: recipeName.trim(),
+    unit: "ชิ้น",
+    desc: note.trim() || "",
+    group: "สินค้าใหม่",
+    status: "พร้อมผลิต",
+  };
+  return [...prev, newItem];
+});
+
 
     if (!v.ok) return;
 
@@ -164,6 +186,7 @@ export default function BuildProduct() {
         unit: r.unit,
       })),
       createdAt: new Date().toISOString(),
+      
     };
 
     try {

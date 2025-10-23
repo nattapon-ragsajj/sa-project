@@ -9,7 +9,7 @@ type Row = {
   lotNo: string;
   name: string;
   qty: number;
-  unit: string;
+  pwdPo: string;
   expDate: string;
   buyDate: string;
 };
@@ -20,12 +20,18 @@ type QaHistoryItem = {
   result: QaStatus;
   checkedBy: string;     // เดโม่ไว้เป็น "ระบบ"
   time: string;          // ISO
+  // ===== ฟิลด์ใหม่สำหรับ pop-up แบบในภาพ =====
+  producer?: string;     // ผลิตโดย
+  source?: string;       // ผลิตจาก
+  location?: string;     // ตั้งอยู่ที่
+  count?: number;        // จำนวนการตรวจสอบ
+
 };
 
 const seedRows: Row[] = [
-  { id: 1, lotNo: "L-240901", name: "คุกกี้เนยสด 250g", qty: 120, unit: "ชิ้น", expDate: "2026-09-01", buyDate: "2025-09-03" },
-  { id: 2, lotNo: "L-240915", name: "บราวนี่ 50g",       qty: 300, unit: "ชิ้น", expDate: "2026-03-15", buyDate: "2025-09-17" },
-  { id: 3, lotNo: "L-240920", name: "มัทฉะโรล 1 ชิ้น",   qty:  48, unit: "ชิ้น", expDate: "2025-12-01", buyDate: "2025-09-22" },
+  { id: 1, lotNo: "L-240901", name: "คุกกี้เนยสด 250g", qty: 120, pwdPo: "LA01", expDate: "2026-09-01", buyDate: "2025-09-03" },
+  { id: 2, lotNo: "L-240915", name: "บราวนี่ 50g",       qty: 300, pwdPo: "LA02", expDate: "2026-03-15", buyDate: "2025-09-17" },
+  { id: 3, lotNo: "L-240920", name: "มัทฉะโรล 1 ชิ้น",   qty:  48, pwdPo: "LA03", expDate: "2025-12-01", buyDate: "2025-09-22" },
 ];
 
 /** ===== LocalStorage helpers ===== */
@@ -68,6 +74,14 @@ export default function QaProduct() {
   const [open, setOpen] = useState(false);
   const [activeLot, setActiveLot] = useState<Row | null>(null);
   const [choice, setChoice] = useState<QaStatus>("ผ่าน");
+  
+  // new
+  const [producer, setProducer] = useState("");
+  const [source, setSource] = useState("");
+  const [locationStr, setLocationStr] = useState("");
+  const [count, setCount] = useState<number | "">("");
+  const [err, setErr] = useState("");
+
   const overlayRef = useRef<HTMLDivElement>(null);
 
   // ประวัติ
@@ -104,21 +118,39 @@ export default function QaProduct() {
   const onRowClick = (r: Row) => {
     setActiveLot(r);
     setChoice("ผ่าน");
+    setProducer("");
+    setSource("");
+    setLocationStr("");
+    setCount("");
+    setErr("");
     setOpen(true);
   };
 
   const confirm = () => {
     if (!activeLot) return;
-    const item: QaHistoryItem = {
-      id: `${activeLot.lotNo}-${Date.now()}`,
-      lotNo: activeLot.lotNo,
-      result: choice,
-      checkedBy: "ระบบ",
-      time: new Date().toISOString(),
-    };
-    const next = [item, ...history];
+
+    // ตรวจง่าย ๆ
+  if (count !== "" && Number(count) < 0) {
+    setErr("จำนวนการตรวจสอบต้องมากกว่าหรือเท่ากับ 0");
+    return;
+  }
+
+  const item: QaHistoryItem = {
+    id: `${activeLot.lotNo}-${Date.now()}`,
+    lotNo: activeLot.lotNo,
+    result: choice,
+    checkedBy: producer.trim() || "ระบบ", // ถ้าไม่กรอก ให้เป็น “ระบบ”
+    time: new Date().toISOString(),
+    producer: producer.trim() || undefined,
+    source: source.trim() || undefined,
+    location: locationStr.trim() || undefined,
+    count: count === "" ? undefined : Number(count),
+  };
+  
+  const next = [item, ...history];
     setHistory(next);
     writeHistory(next);
+    setErr("");
     setOpen(false);
   };
 
@@ -153,9 +185,9 @@ export default function QaProduct() {
             <thead>
               <tr>
                 <th>เลขล็อต</th>
+                <th>รหัสสินค้า</th>
                 <th>ชื่อสินค้า</th>
                 <th>จำนวน</th>
-                <th>หน่วย</th>
                 <th>วันหมดอายุ</th>
                 <th>วันที่ซื้อ</th>
               </tr>
@@ -171,9 +203,9 @@ export default function QaProduct() {
                 tableRows.map(r => (
                   <tr key={r.id} className="clickable" onClick={() => onRowClick(r)}>
                     <td>{r.lotNo}</td>
+                    <td>{r.pwdPo}</td>
                     <td>{r.name}</td>
                     <td className="num">{r.qty.toLocaleString()}</td>
-                    <td>{r.unit}</td>
                     <td>{r.expDate}</td>
                     <td>{r.buyDate}</td>
                   </tr>
@@ -185,69 +217,107 @@ export default function QaProduct() {
       </div>
 
       {/* Pop-up */}
-      {open && (
-        <div className="qa-overlay" ref={overlayRef}>
-          <div className="qa-modal">
-            <button className="qa-close" onClick={() => setOpen(false)} aria-label="ปิด">✕</button>
+      {/* Pop-up */}
+{open && (
+  <div className="qa-overlay" ref={overlayRef}>
+    <div className="qa-modal">
+      <button className="qa-close" onClick={() => setOpen(false)} aria-label="ปิด">✕</button>
 
-            <div className="qa-judge-card">
-              <div className="qa-radio">
-                <label>
-                  <input
-                    type="radio"
-                    name="qa"
-                    value="ผ่าน"
-                    checked={choice === "ผ่าน"}
-                    onChange={() => setChoice("ผ่าน")}
-                  />
-                  <span>ผ่าน</span>
-                </label>
-              </div>
-              <div className="qa-radio">
-                <label>
-                  <input
-                    type="radio"
-                    name="qa"
-                    value="ไม่ผ่าน"
-                    checked={choice === "ไม่ผ่าน"}
-                    onChange={() => setChoice("ไม่ผ่าน")}
-                  />
-                  <span>ไม่ผ่าน</span>
-                </label>
-              </div>
-              <button className="qa-confirm" onClick={confirm}>ยืนยัน</button>
-            </div>
-
-            <h3 className="qa-subtitle">ประวัติการตรวจสอบคุณภาพ</h3>
-            <div className="qa-history-wrap">
-              <table className="qa-history">
-                <thead>
-                  <tr>
-                    <th>ลำดับ</th>
-                    <th>ผลการตรวจสอบ</th>
-                    <th>ตรวจสอบโดย</th>
-                    <th>วันที่</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {activeLotHistory.length === 0 ? (
-                    <tr><td colSpan={4} className="muted">ยังไม่มีประวัติ</td></tr>
-                  ) : (
-                    activeLotHistory.map((h, i) => (
-                      <tr key={h.id}>
-                        <td className="num">{i + 1}</td>
-                        <td className={h.result === "ผ่าน" ? "ok" : "ng"}>{h.result}</td>
-                        <td>{h.checkedBy}</td>
-                        <td>{new Date(h.time).toLocaleString()}</td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+      {/* ===== แถวฟอร์ม 3 กล่อง ===== */}
+      <div className="qa-grid">
+        {/* ซ้าย: รายละเอียดอ่านอย่างเดียว */}
+        <div className="qa-card">
+          <div className="kv">
+            <div className="k">เลขล็อต :</div>
+            <div className="v">{activeLot?.lotNo || "-"}</div>
+          </div>
+          <div className="kv">
+            <div className="k">รหัสสินค้า :</div>
+            <div className="v">{activeLot?.pwdPo || "-"}</div>
+          </div>
+          <div className="kv">
+            <div className="k">ชื่อสินค้า :</div>
+            <div className="v">{activeLot?.name || "-"}</div>
           </div>
         </div>
-      )}
+
+        {/* กลาง: จำนวนการทดสอบ */}
+        <div className="qa-card qa-center">
+          <label className="qa-label">จำนวนการทดสอบ</label>
+          <input
+            className="qa-input qa-count"
+            type="number"
+            min={0}
+            placeholder="0"
+            value={count}
+            onChange={(e)=>setCount(e.target.value === "" ? "" : Number(e.target.value))}
+          />
+        </div>
+
+        {/* ขวา: ผ่าน/ไม่ผ่าน + ยืนยัน */}
+        <div className="qa-card qa-right">
+          <div className="qa-radio">
+            <label>
+              <input
+                type="radio"
+                name="qa"
+                value="ผ่าน"
+                checked={choice === "ผ่าน"}
+                onChange={() => setChoice("ผ่าน")}
+              />
+              <span>ผ่าน</span>
+            </label>
+          </div>
+          <div className="qa-radio">
+            <label>
+              <input
+                type="radio"
+                name="qa"
+                value="ไม่ผ่าน"
+                checked={choice === "ไม่ผ่าน"}
+                onChange={() => setChoice("ไม่ผ่าน")}
+              />
+              <span>ไม่ผ่าน</span>
+            </label>
+          </div>
+
+          {err && <div className="qa-error">{err}</div>}
+          <button className="qa-confirm" onClick={confirm}>ยืนยัน</button>
+        </div>
+      </div>
+
+      {/* ===== ตารางประวัติ ===== */}
+      <h3 className="qa-subtitle">ประวัติการตรวจสอบคุณภาพ</h3>
+      <div className="qa-history-wrap">
+        <table className="qa-history">
+          <thead>
+            <tr>
+              <th>ครั้งที่</th>
+              <th>ผลการตรวจสอบ</th>
+              <th>จำนวนคงเหลือ</th>
+              <th>วันที่</th>
+            </tr>
+          </thead>
+          <tbody>
+            {activeLotHistory.length === 0 ? (
+              <tr><td colSpan={4} className="muted">ยังไม่มีประวัติ</td></tr>
+            ) : (
+              activeLotHistory.map((h, i) => (
+                <tr key={h.id}>
+                  <td className="num">{i + 1}</td>
+                  <td className={h.result === "ผ่าน" ? "ok" : "ng"}>{h.result}</td>
+                  <td className="num">{activeLot?.qty.toLocaleString()}</td>
+                  <td>{new Date(h.time).toLocaleString()}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

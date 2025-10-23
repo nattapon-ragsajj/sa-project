@@ -43,7 +43,7 @@
   background: linear-gradient(90deg,#e0ddf9 0%, #9aa5ff 60%, #8482fc 100%);
   padding:14px;
   border-radius: 18px;
-  border: 2px solid #0202b9; 
+  border: 1.5px solid #00001e; 
   box-shadow: 0 8px 24px rgba(71, 61, 255, .18);
 }
 
@@ -245,7 +245,7 @@
 /* inputs ใน modal */
 .modal-label{ display:block; color:#eae6e6; margin:8px 0 6px; }
 .modal-input, .modal-textarea, .ing-row select{
-  width:100%;
+  width:401px;
   padding:10px 12px;
   border-radius:10px;
   border:1px solid #524449;
@@ -285,13 +285,11 @@
 }
 
 /* ปุ่มสไตล์ */
-/* .btn.ghost{ background:#ffffff; color:#2b2b66; border:2px solid #cfcfe8; }
-.btn.ghost:hover{ background:#f7f7fd; border-color:#b8bae8; } */
+
 .btn.danger{ background:#ffebee; color:#b71c1c; border:2px solid #ffcdd2;transition: transform .12s ease, background .12s ease, color .12s ease, border-color .12s ease; }
 .btn.danger:hover{transform: scale(1.03); background:#ffcdd2; color:#b71c1c ; }
 .btn.danger:active{ transform: scale(.97);background:#b71c1c;color:#ffecec;border-color:#b71c1c; }
-/* .product-page .add-btn:hover{ transform: scale(1.03); color:#eeecec; background: #020202; border: 2px solid white; }
-.product-page .add-btn:active{ transform: scale(.97); } */
+
 
 
 /* เฉพาะปุ่มในการ์ด */
@@ -299,16 +297,17 @@
 .product-page .prod-actions .btn.danger {
   justify-content: right;
   width: 200px;
-  padding: 6px 10px;
-  font-size: 0.8rem;
+  height: 50px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
   border-radius: 8px;
 }
 
 /* --- ย่อกล่องปุ่มขวา + ปุ่ม --- */
 .product-page .prod-actions{
   justify-content:right ;
-  padding: 6px;          /* จาก 10px → 6px */
-  gap: 6px;              /* จาก 10px → 6px */
+  padding: 10px;          
+  gap: 10px;              
   border-radius: 12px;
   width: max-content;    /* กว้างเท่าที่ปุ่มต้องการ ไม่ดันการ์ด */
 }

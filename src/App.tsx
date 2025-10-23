@@ -1,51 +1,61 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./loginPage";
-import Home from "./home";
+
+import ProductionLayout from "./layout/ProductionLayout";
+import WarehouseLayout from "./layout/WarehouseLayout";
+import QALayout from "./layout/QALayout";
+
+// หน้าย่อย ฝ่ายผลิต
 import ProductPage from "./productPage";
-import MaterialSelect from "./materialSelect";
 import BuildProduct from "./buildProduct";
-import RawMaterial from "./rawMaterial";
+import MaterialSelect from "./materialSelect";
 import Product from "./product";
-import RawMaterialStock from "./rawMaterialStock"; // ⬅️ เพิ่มบรรทัดนี้
+
+// หน้าย่อย ฝ่ายคลัง
+import RawMaterial from "./rawMaterial";
+import RawMaterialStock from "./rawMaterialStock";
 import WareHouse from "./warehouse";
 import WarehouseStock from "./warehouseStock";
+
+// หน้าย่อย ฝ่าย QA
 import QaMaterial from "./qaMaterial";
 import QaProduct from "./qaProduct";
 
-
-
-// เพื่อน ๆ เมนูอื่น (ทำหน้าเปล่าไว้ก่อน)
-/*const RawMaterial = () => <div style={{padding:16}}>คลังวัตถุดิบ</div>;*/
-// const Warehouse    = () => <div style={{padding:16}}>คลังสินค้า</div>;
-const Qcontrol   = () => <div style={{padding:16}}>คุณภาพสินค้า</div>;
-const ProductionOrder = () => <div style={{padding:16}}>รายการคำสั่งซื้อสินค้า</div>;
-const SalesList    = () => <div style={{padding:16}}>รายการขายสินค้า</div>;
-const Welcome      = () => <div style={{padding:16}}>ยินดีต้อนรับสู่ Home</div>;
+// ✅ Import global provider
+import { ProductProvider } from "./context/ProductContext";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />       
-        {/* Home = แพลตฟอร์มหลัก (Navbar อยู่ตลอด) */}
-        <Route path="/home" element={<Home />}>
-          <Route index element={<Welcome />} />
-          <Route path="product"    element={<Product/>}/>
-          <Route path="product-page" element={<ProductPage />} />
-          {<Route path="material-select" element={<MaterialSelect />} />}
-          <Route path="raw-material"    element={<RawMaterial />} />
-          <Route path="qa-material"    element={<QaMaterial />} />
-          <Route path="qa-product"    element={<QaProduct />} />
-          <Route path="raw-material/raw-stock" element={<RawMaterialStock />} />
-          <Route path="warehouse"       element={<WareHouse />} />
-          <Route path="warehouse/warehouse-stock" element={<WarehouseStock />} />
-          <Route path="q-control"       element={<Qcontrol />} />
-          <Route path="production-order" element={<ProductionOrder/>}/>
-          <Route path="sales-list"      element={<SalesList />} />
-          <Route path="build-product" element={<BuildProduct />} />
-        </Route>
-      </Routes>
-    </Router>
+    <ProductProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+
+          {/* ฝ่ายผลิต */}
+          <Route path="/production" element={<ProductionLayout />}>
+            <Route index element={<ProductPage />} />
+            <Route path="product" element={<Product />} />
+            <Route path="build-product" element={<BuildProduct />} />
+            <Route path="material-select" element={<MaterialSelect />} />
+          </Route>
+
+          {/* ฝ่ายคลัง */}
+          <Route path="/warehouse" element={<WarehouseLayout />}>
+            <Route index element={<WareHouse />} />
+            <Route path="raw-material" element={<RawMaterial />} />
+            <Route path="raw-stock" element={<RawMaterialStock />} />
+            <Route path="warehouse-stock" element={<WarehouseStock />} />
+          </Route>
+
+          {/* ฝ่าย QA */}
+          <Route path="/qa" element={<QALayout />}>
+            <Route index element={<QaProduct />} />
+            <Route path="product" element={<QaProduct />} />
+            <Route path="material" element={<QaMaterial />} />
+          </Route>
+        </Routes>
+      </Router>
+    </ProductProvider>
   );
 }
 

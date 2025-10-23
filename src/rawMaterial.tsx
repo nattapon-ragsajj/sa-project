@@ -98,8 +98,8 @@ export default function RawMaterial() {
     <div className="rm-page">
       <div className="rm-top">
         <div className="rm-tabs">
-          <NavLink to="/home/raw-material" end className="tab-link">การจัดการ</NavLink>
-          <NavLink to="/home/raw-material/raw-stock" className="tab-link">คลัง</NavLink>
+          <NavLink to="/warehouse/raw-material" end className="tab-link">การจัดการ</NavLink>
+          <NavLink to="/warehouse/raw-material/raw-stock" className="tab-link">คลัง</NavLink>
         </div>
         {/* <div className="rm-right-buttons">
           <button className="btn gray">สั่งซื้อวัตถุดิบ</button>

@@ -118,8 +118,8 @@ export default function WarehouseStock() {
       {/* แท็บนำทาง */}
       
       <div className="wh-tabs">
-        <NavLink to="/home/warehouse"end className="tab-link">คลัง</NavLink>
-        <NavLink to="/home/warehouse/warehouse-stock" end className="tab-link">ประวัติการทำรายการ</NavLink>
+        <NavLink to="/warehouse"end className="tab-link">คลัง</NavLink>
+        <NavLink to="/warehouse/warehouse-stock" end className="tab-link">ประวัติการทำรายการ</NavLink>
       </div>
       
 

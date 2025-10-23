@@ -71,7 +71,7 @@
 .qa-table td{ padding:12px 10px; border-top:1px solid #4a4a4a; }
 .qa-table tr.clickable{ cursor:pointer; }
 .qa-table tr.clickable:hover{ background:#454545; }
-.num{ text-align:right; }
+.num{ text-align:left; }
 
 /* Pop-up */
 .no-scroll{ overflow:hidden; }
@@ -89,6 +89,51 @@
   position:absolute; top:10px; right:10px; border:none; background:#fff;
   width:32px; height:32px; border-radius:8px; cursor:pointer; font-size:16px;
 }
+
+
+.qa-close:hover{ filter: brightness(0.95); }
+
+/* --- แถวบน: 3 กล่อง --- */
+.qa-grid{
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr 0.8fr; /* ซ้ายใหญ่ กลาง/ขวา เท่ากัน */
+  gap: 16px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.qa-card{
+  background: #fff;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  display: flex;
+  flex-direction: column;      /* สำคัญ: จัด label / input ลงคนละบรรทัด */
+  gap: 8px;
+}
+
+.qa-center{ align-items: stretch; justify-content: center; }
+.qa-right { gap: 10px; }
+
+.qa-label{
+  display: block;              /* บังคับ label ขึ้นบรรทัดใหม่ */
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.qa-input{
+  border: 1px solid #d9dce3;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: inherit;
+  background: #fff;
+  width: 100%;
+}
+.qa-input:focus{
+  outline: none; border-color: #8aa2ff;
+  box-shadow: 0 0 0 3px rgba(138,162,255,.25);
+}
+.qa-count{ text-align: center; font-weight: 700; font-size: 1.1rem; }
 
 /* กล่องตัวเลือกผ่าน/ไม่ผ่าน */
 .qa-judge-card{
@@ -108,10 +153,30 @@
   width:88%; border-collapse:separate; border-spacing:0;
   background:#3a3a3a; color:#eaeaea; border-radius:8px; overflow:hidden;
 }
-.qa-history thead th{
-  background:#2f2f2f; color:#fff; font-weight:700; text-align:left; padding:10px;
+.qa-history thead th{ 
+  background:#2f2f2f; color:#fff; font-weight:700; text-align:center; padding:10px;
 }
-.qa-history td{ padding:10px; border-top:1px solid #4a4a4a; }
+.qa-history td{ text-align: center;vertical-align: middle; padding:10px; border-top:1px solid #4a4a4a; }
 .qa-history td.ok{ color:#b6ffb6; font-weight:800; }
 .qa-history td.ng{ color:#ffd0d0; font-weight:800; }
 .muted{ text-align:center; color:#cfcfcf; }
+
+
+
+
+/* แถวรายละเอียด (คีย์–ค่า) ในการ์ดซ้าย */
+.kv{
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 14px;
+  align-items: center;
+  padding: 6px 2px;
+}
+.kv .k{
+  color: #333;
+  font-weight: 600;
+}
+.kv .v{
+  color: #111;
+  font-weight: 700;
+}

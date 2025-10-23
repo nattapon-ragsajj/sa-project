@@ -95,8 +95,8 @@ export default function WareHouse() {
 
       {/* ===== แท็บบน: ไป-กลับระหว่างคลัง และประวัติการทำรายการ ===== */}
       <div className="wh-tabs" style={{ marginBottom: 12 }}>
-        <NavLink to="/home/warehouse" end className="tab-link">คลัง</NavLink>
-        <NavLink to="/home/warehouse/warehouse-stock"end className="tab-link">
+        <NavLink to="/warehouse" end className="tab-link">คลัง</NavLink>
+        <NavLink to="/warehouse/warehouse-stock"end className="tab-link">
           ประวัติการทำรายการ
         </NavLink>
       </div>
