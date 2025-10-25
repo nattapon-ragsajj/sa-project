@@ -34,11 +34,12 @@
 .wh-table-wrap{}
 .wh-table{
   background:#2a2a2f; color:#e9e9f2; border-radius:10px; overflow:hidden;
+  margin-top: 20px;
   box-shadow:0 6px 16px rgba(0,0,0,.16);
 }
 .wh-row{
   display:grid;
-  grid-template-columns: 1.1fr 1.2fr 1.8fr .9fr .8fr 1.2fr 1.2fr;
+  grid-template-columns: 1.2fr 1.2fr 1.2fr 1.2fr;
   align-items:center;
   gap:12px;
   padding:14px 12px;
@@ -52,6 +53,8 @@
 
 .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
 .wh-empty{ padding:18px; text-align:center; color:#bdbddb; }
+
+
 
 /* ========== แผ่นโอเวอร์เลย์สีน้ำเงิน ========== */
 .sheet-backdrop{
@@ -233,4 +236,32 @@
   align-items:center;
   justify-content:space-between;
   gap:8px;
+  flex-wrap: wrap;
+}
+
+
+.btn.cancel {
+  background: #dcd8ff;
+  color: #1b1440;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  border: none;
+}
+.btn.cancel:hover { background: #c4baff; }
+
+
+.ws-header {
+  display: flex;
+  justify-content: space-between; /* ✅ ซ้าย = wh-tabs, ขวา = ปุ่ม */
+  align-items: center;
+  flex-wrap: wrap; /* รองรับจอเล็ก */
+  gap: 8px;
+  margin-bottom: 14px;
+}
+/* ===== Hover effect สำหรับแถวในตารางภายใน ===== */
+.wh-table .wh-row:not(.wh-head):hover {
+  background: #444450;              /* สีเทาอ่อนขึ้น ดู contrast ชัด */
+  transition: background 0.15s ease;
 }

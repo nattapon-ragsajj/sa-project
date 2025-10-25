@@ -1,0 +1,83 @@
+.wmm-page {
+  min-height: 100vh;
+  padding: 20px;
+  font-family: system-ui, Arial, sans-serif;
+  color: #1b1440;
+}
+
+.wmm-title {
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+/* ===== Tabs ===== */
+.wmm-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.tab-btn {
+  text-decoration:none;
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:6px;
+  background:#e9e9f5;
+  color:#2b2b66;
+  font-weight:700;
+  font-size:.9rem;
+  border: 2px solid #f5f4f7;           /* เพิ่มไว้เพื่อเล่นสีตอน hover */
+  transition: transform .12s ease,          /* ลื่นขึ้น */
+              background .12s ease,
+              color .12s ease,
+              border-color .12s ease;
+}
+.tab-btn:hover {
+  background: #060038;
+  color: #ffffff;
+  transform: scale(1.05);
+  border: 2px solid #7bacff;
+}
+
+.tab-btn:active {
+  transform: scale(0.97);
+  filter: brightness(0.9);
+}
+.tab-btn.active {
+  background: #2b0c6b;
+  color: #fff;
+  border: 2px solid #000;
+}
+
+
+/* ===== Table ===== */
+.wmm-table {
+  background: #2a2a2f;
+  border-radius: 10px;
+  overflow: hidden;
+  color: #f5f5f5;
+}
+.wmm-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr 0.7fr 1.3fr 1fr 1fr 1fr 1.3fr;
+  align-items: center;
+  padding: 14px 12px;
+}
+.wmm-head {
+  background: #1f1f25;
+  font-weight: 800;
+}
+.wmm-row.alt {
+  background: #343436;
+}
+.wmm-row:hover {
+  background: #3a3a40;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .wmm-row {
+    font-size: 0.85rem;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+  }
+}

@@ -16,6 +16,14 @@ import RawMaterial from "./rawMaterial";
 import RawMaterialStock from "./rawMaterialStock";
 import WareHouse from "./warehouse";
 import WarehouseStock from "./warehouseStock";
+import RawMaterialLot from "./RawMaterialLot";
+import RawMaterialStore from "./RawMaterialStore";
+import RawMaterialAllocate from "./RawMaterialAllocate";
+import WarehouseManageProduct from "./warehouseManageProduct";
+import WarehouseManageMat from "./warehouseManageMat";
+import WarehouseManageProductList from "./warehouseManageProductList";
+
+
 
 // หน้าย่อย ฝ่าย QA
 import QaMaterial from "./qaMaterial";
@@ -40,12 +48,35 @@ function App() {
           </Route>
 
           {/* ฝ่ายคลัง */}
-          <Route path="/warehouse" element={<WarehouseLayout />}>
-            <Route index element={<WareHouse />} />
-            <Route path="raw-material" element={<RawMaterial />} />
-            <Route path="raw-stock" element={<RawMaterialStock />} />
-            <Route path="warehouse-stock" element={<WarehouseStock />} />
-          </Route>
+            <Route path="/warehouse" element={<WarehouseLayout />}>
+          {/* หน้าหลักคลังสินค้า */}
+          <Route index element={<WareHouse />} />
+
+          {/* หน้าย่อยของคลัง */}
+           <Route path="warehouse-stock" element={<WarehouseStock />} />
+          <Route path="manage-product" element={<WarehouseManageProduct />} />
+          <Route path="warehouse-manage-product" element={<WarehouseManageProductList />} />
+
+          {/* หน้าหลักคลังสินค้า */}
+        
+        
+  {/* ====== คลังวัตถุดิบ + หน้าย่อย ====== */}
+        <Route path="raw-material" element={<RawMaterial />} />
+        <Route path="raw-material/lot" element={<RawMaterialLot />} />
+        <Route path="raw-material/store" element={<RawMaterialStore />} />
+        <Route path="raw-material/allocate" element={<RawMaterialAllocate />} />
+
+  {/* คลังวัตถุดิบ (สต็อก) */}
+        <Route path="raw-stock" element={<RawMaterialStock />} />
+
+  {/* จัดเก็บสินค้า */}
+        <Route path="warehouse-stock" element={<WarehouseStock />} />
+
+  {/* จัดการทำรายการคลัง */}
+        <Route path="warehouse-manage-mat" element={<WarehouseManageMat />}/>
+
+
+        </Route>
 
           {/* ฝ่าย QA */}
           <Route path="/qa" element={<QALayout />}>

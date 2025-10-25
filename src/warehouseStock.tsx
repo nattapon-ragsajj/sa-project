@@ -1,182 +1,167 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./warehouseStock.css";
 
-type TxType = "ขาย" | "หมดอายุ";
-
-type TxRow = {
-  id: number;          // running id
-  time: string;        // ISO string
-  type: TxType;        // ประเภทการนำออก
+type StockRow = {
+  id: number;
   lotNo: string;
   orderNo: string;
+  productCode: string;
   name: string;
   qty: number;
-  unit: string;
-  note?: string;
+  mfgDate: string;
+  expDate: string;
+  status: string;
 };
 
-const seed: TxRow[] = [
+const seed: StockRow[] = [
   {
     id: 1,
-    time: new Date().toISOString(),
-    type: "ขาย",
     lotNo: "L-240901",
     orderNo: "PO-001",
+    productCode: "P-001",
     name: "น้ำตาลทรายขาว",
-    qty: 5,
-    unit: "กก.",
-    note: "เดโมข้อมูลเริ่มต้น",
+    qty: 50,
+    mfgDate: "2025-09-01",
+    expDate: "2026-09-01",
+    status: "ยังไม่จัดเก็บเข้าคลัง",
+  },
+  {
+    id: 2,
+    lotNo: "L-240915",
+    orderNo: "PO-002",
+    productCode: "P-002",
+    name: "แป้งสาลี",
+    qty: 30,
+    mfgDate: "2025-09-15",
+    expDate: "2026-03-15",
+    status: "ยังไม่จัดเก็บเข้าคลัง",
+  },
+  {
+    id: 3,
+    lotNo: "L-240920",
+    orderNo: "PO-003",
+    productCode: "P-003",
+    name: "เนยจืด",
+    qty: 12,
+    mfgDate: "2025-09-20",
+    expDate: "2026-01-20",
+    status: "ยังไม่จัดเก็บเข้าคลัง",
   },
 ];
 
-function readHistory(): TxRow[] {
-  try {
-    const raw = localStorage.getItem("wh-history");
-    if (!raw) return seed;
-    const arr = JSON.parse(raw) as TxRow[];
-    if (!Array.isArray(arr)) return seed;
-    return arr;
-  } catch {
-    return seed;
-  }
-}
-
-function saveHistory(rows: TxRow[]) {
-  localStorage.setItem("wh-history", JSON.stringify(rows));
-}
-
 export default function WarehouseStock() {
-  const [rows, setRows] = useState<TxRow[]>(readHistory());
+  const [rows, setRows] = useState<StockRow[]>(seed);
   const [q, setQ] = useState("");
-  const [tx, setTx] = useState<"ทั้งหมด" | TxType>("ทั้งหมด");
-  const [dateFrom, setDateFrom] = useState<string>("");
-  const [dateTo, setDateTo] = useState<string>("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
 
-  useEffect(() => {
-    // sync from storage if other tab/page updates
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === "wh-history") setRows(readHistory());
-    };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
+  const [open, setOpen] = useState(false); // ✅ popup toggle
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
     const from = dateFrom ? new Date(dateFrom + "T00:00:00") : null;
     const to = dateTo ? new Date(dateTo + "T23:59:59") : null;
-
-    return rows
-      .filter(r => {
-        if (tx !== "ทั้งหมด" && r.type !== tx) return false;
-        if (from && new Date(r.time) < from) return false;
-        if (to && new Date(r.time) > to) return false;
-
-        if (!s) return true;
-        const bag =
-          `${r.type} ${r.lotNo} ${r.orderNo} ${r.name} ${r.qty} ${r.unit} ${r.note || ""}`.toLowerCase();
-        return bag.includes(s);
-      })
-      .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()); // ใหม่สุดก่อน
-  }, [rows, q, tx, dateFrom, dateTo]);
+    return rows.filter((r) => {
+      if (from && new Date(r.mfgDate) < from) return false;
+      if (to && new Date(r.mfgDate) > to) return false;
+      if (!s) return true;
+      const bag = `${r.lotNo} ${r.orderNo} ${r.productCode} ${r.name} ${r.status}`.toLowerCase();
+      return bag.includes(s);
+    });
+  }, [rows, q, dateFrom, dateTo]);
 
   const clearFilters = () => {
-    setQ(""); setTx("ทั้งหมด"); setDateFrom(""); setDateTo("");
-  };
-
-  const exportCSV = () => {
-    const header = [
-      "เวลา", "ประเภท", "เลขล็อต", "เลขคำสั่งผลิต", "ชื่อสินค้า",
-      "จำนวน", "หน่วย", "หมายเหตุ"
-    ];
-    const lines = filtered.map(r => [
-      new Date(r.time).toLocaleString("th-TH"),
-      r.type, r.lotNo, r.orderNo, r.name,
-      r.qty.toString(), r.unit, r.note?.replaceAll("\n", " ") || ""
-    ]);
-    const csv = [header, ...lines].map(line =>
-      line.map(x => `"${(x ?? "").toString().replaceAll('"', '""')}"`).join(",")
-    ).join("\n");
-
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = "warehouse-history.csv";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const removeAll = () => {
-    if (!confirm("ลบประวัติทั้งหมด?")) return;
-    saveHistory([]);
-    setRows([]);
+    setQ("");
+    setDateFrom("");
+    setDateTo("");
   };
 
   return (
     <div className="ws-page">
-      {/* แท็บนำทาง */}
+      <h2 className="wmm-title">จัดเก็บสินค้า</h2>
+
+
+      {/* ===== Tabs ด้านบน ===== */}
+      {/* ===== Header ส่วนบน ===== */}
+<div className="ws-header">
+  {/* ปุ่มแท็บฝั่งซ้าย */}
+  <div className="wh-tabs">
+    <NavLink to="/warehouse" end className="tab-link">
+      คลังสินค้า
+    </NavLink>
+    <NavLink to="/warehouse/warehouse-stock" end className="tab-link">
+      จัดเก็บสินค้า
+    </NavLink>
+    <NavLink to="/warehouse/manage-product" end className="tab-link">
+      นำสินค้าจากคลังออก
+    </NavLink>
+  </div>
+
+  {/* ปุ่มขวาสุด */}
+  <div className="ws-top-actions">
+    <button className="btn-store" onClick={() => setOpen(true)}>
+      จัดเก็บสินค้าที่เหลือจากการขาย
+    </button>
+  </div>
+</div>
+
+
       
-      <div className="wh-tabs">
-        <NavLink to="/warehouse"end className="tab-link">คลัง</NavLink>
-        <NavLink to="/warehouse/warehouse-stock" end className="tab-link">ประวัติการทำรายการ</NavLink>
-      </div>
-      
 
-      <div className="ws-title">ประวัติการทำรายการ</div>
-
-      {/* แถบเครื่องมือค้นหา/กรอง */}
-      <div className="ws-tools">
-        <input
-          className="ws-input"
-          placeholder="ค้นหา: ประเภท/ล็อต/คำสั่ง/ชื่อ/หมายเหตุ"
-          value={q}
-          onChange={(e)=>setQ(e.target.value)}
-        />
-        <select className="ws-input" value={tx} onChange={(e)=>setTx(e.target.value as any)}>
-          <option value="ทั้งหมด">ทั้งหมด</option>
-          <option value="ขาย">ขาย</option>
-          <option value="หมดอายุ">หมดอายุ</option>
-        </select>
-        <input className="ws-input" type="date" value={dateFrom} onChange={e=>setDateFrom(e.target.value)} />
-        <input className="ws-input" type="date" value={dateTo} onChange={e=>setDateTo(e.target.value)} />
-
-        <button className="ws-btn" onClick={clearFilters}>ล้างตัวกรอง</button>
-        <div className="ws-spacer" />
-        <button className="ws-btn outline" onClick={exportCSV}>ส่งออก CSV</button>
-        <button className="ws-btn danger" onClick={removeAll}>ลบทั้งหมด</button>
-      </div>
-
-      {/* ตาราง */}
+      {/* ===== ตารางหลัก ===== */}
       <div className="ws-table-wrap">
         <div className="ws-table">
           <div className="ws-row ws-head">
-            <div>เวลา</div>
-            <div>ประเภท</div>
             <div>เลขล็อต</div>
-            <div>เลขคำสั่งผลิต</div>
+            <div>เลขที่สั่งผลิต</div>
+            <div>รหัสสินค้า</div>
             <div>ชื่อสินค้า</div>
             <div>จำนวน</div>
-            <div>หน่วย</div>
-            <div>หมายเหตุ</div>
+            <div>วันที่ผลิต</div>
+            <div>วันหมดอายุ</div>
+            <div>สถานะ</div>
           </div>
 
           {filtered.map((r, i) => (
             <div key={r.id} className={`ws-row ws-body ${i % 2 ? "alt" : ""}`}>
-              <div className="mono">{new Date(r.time).toLocaleString("th-TH")}</div>
-              <div className={`pill ${r.type === "ขาย" ? "ok" : "warn"}`}>{r.type}</div>
-              <div className="mono">{r.lotNo}</div>
-              <div className="mono">{r.orderNo}</div>
+              <div>{r.lotNo}</div>
+              <div>{r.orderNo}</div>
+              <div>{r.productCode}</div>
               <div>{r.name}</div>
-              <div className="mono">{r.qty.toLocaleString()}</div>
-              <div>{r.unit}</div>
-              <div className="truncate" title={r.note}>{r.note || "-"}</div>
+              <div>{r.qty}</div>
+              <div>{r.mfgDate}</div>
+              <div>{r.expDate}</div>
+              <div>{r.status}</div>
             </div>
           ))}
 
-          {filtered.length === 0 && <div className="ws-empty">ไม่พบประวัติ</div>}
+          {filtered.length === 0 && (
+            <div className="ws-empty">ยังไม่มีรายการจัดเก็บ</div>
+          )}
         </div>
       </div>
+
+      {/* ===== Popup ===== */}
+      {open && (
+        <>
+          <div className="modal-backdrop" onClick={() => setOpen(false)} />
+          <div className="modal">
+            <button className="close-btn" onClick={() => setOpen(false)}>×</button>
+            <div className="modal-inner">
+              <label>รหัสสินค้า</label>
+              <input type="text" placeholder="เลือกสินค้า" />
+              <label>ชื่อสินค้า</label>
+              <input type="text" placeholder="เลือกชื่อสินค้า" />
+              <label>เลขล็อต</label>
+              <input type="text" placeholder="กรอกเลขล็อต" />
+              <label>จำนวน</label>
+              <input type="number" placeholder="กรอกจำนวน" />
+              <button className="confirm-btn">ยืนยัน</button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

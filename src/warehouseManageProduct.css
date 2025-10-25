@@ -1,0 +1,214 @@
+/* ===== Page ===== */
+.wm-page {
+  min-height: 100vh;
+  padding: 16px;
+  font-family: system-ui, Arial, sans-serif;
+}
+
+/* ===== Tabs ===== */
+.wh-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.tab-link {
+  background: #e9e9f5;
+  color: #1b1440;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.tab-link.active {
+  background: #2b0c6b;
+  color: #fff;
+}
+
+/* ===== Table ===== */
+.wm-table {
+  background: #2a2a2f;
+  color: #f5f5f5;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.wm-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1.8fr 1fr 1fr;
+  padding: 14px 12px;
+  align-items: center;
+}
+.wm-head {
+  background: #1f1f25;
+  font-weight: 800;
+}
+.wm-body.alt {
+  background: #343436;
+}
+.wm-body:hover {
+  background: #3a3a40;
+  cursor: pointer;
+}
+
+/* ===== Modal ===== */
+.wm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1000;
+}
+.wm-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 40px;
+  width: 900px;
+  max-width: 95vw;
+  padding: 36px 32px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+  z-index: 1001;
+}
+.wm-close {
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  border: 1.5px solid #000;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 1.3rem;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+}
+.wm-modal-title {
+  color: #1f2a83;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+/* ===== Inner Table ===== */
+.wm-inner-table {
+  background: #2a2a2f;
+  color: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+.wm-inner-table .wm-row {
+  grid-template-columns: 1.2fr 1fr 1fr 1fr 1.2fr;
+}
+.wm-inner-table .wm-head {
+  background: #1f1f25;
+  font-weight: 700;
+}
+.wm-inner-table .wm-body.alt {
+  background: #343436;
+}
+
+/* ===== Input & Actions ===== */
+.wm-input {
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+.wm-modal-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+}
+.wm-add {
+  background: #eae6ff;
+  border: none;
+  color: #1b1440;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.wm-confirm {
+  background: #1b1440;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.wm-confirm:hover {
+  background: #0a0a25;
+}
+
+
+
+
+.wm-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+/* ===== ฝั่งขวา ===== */
+.wm-card {
+  background: #0a0a52;
+  border-radius: 24px;
+  padding: 24px;
+  color: #fff;
+}
+.wm-item {
+  background: #eaeaea;
+  color: #000;
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.wm-info {
+  font-size: 0.9rem;
+}
+.wm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+.wm-actions button {
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.wm-actions .edit {
+  background: #eae6ff;
+}
+.wm-actions .delete {
+  background: #f7b5b5;
+}
+.wm-reason {
+  margin-top: 16px;
+}
+.wm-reason textarea {
+  width: 100%;
+  height: 80px;
+  border: none;
+  border-radius: 10px;
+  padding: 8px;
+  background: #d9d9d9;
+}
+.wm-submit {
+  background: #c9c7ff;
+  color: #1b1440;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 12px;
+  width: 100%;
+}
+

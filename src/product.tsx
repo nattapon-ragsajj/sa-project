@@ -10,7 +10,7 @@ type ProduceOrder = {
   createDate: string;
   startDate: string;
   dueDate: string;
-  status: "กำลังผลิต" | "เสร็จสิ้น" | "เสร็จสิ้นบางส่วนหรือยังไม่เสร็จ";
+  status: "กำลังผลิต" | "เสร็จสิ้น" | "เสร็จสิ้นบางส่วนหรือยังไม่เสร็จ" | "ยกเลิก" ;
 };
 
 type ReqRow = {
@@ -179,7 +179,7 @@ function CreateOrderModal({
 }
 
 /* ========= Modal #1: อัปเดตสถานะ ========= */
-type StatusOpt = "กำลังผลิต" | "เสร็จสิ้น" | "เสร็จสิ้นบางส่วนหรือยังไม่เสร็จ";
+type StatusOpt = "กำลังผลิต" | "เสร็จสิ้น" | "เสร็จสิ้นบางส่วนหรือยังไม่เสร็จ" | "ยกเลิก";
 function UpdateStatusModal({
   open, defaultValue = "กำลังผลิต", onClose, onConfirm
 }: {
@@ -200,7 +200,7 @@ function UpdateStatusModal({
           <div className="m-white">
             <h3 className="m-title">อัปเดตสถานะ</h3>
             <div className="radio-list">
-              {(["กำลังผลิต","เสร็จสิ้น","เสร็จสิ้นบางส่วนหรือยังไม่เสร็จ"] as StatusOpt[]).map(v => (
+              {(["กำลังผลิต","เสร็จสิ้น","เสร็จสิ้นบางส่วนหรือยังไม่เสร็จ","ยกเลิก"] as StatusOpt[]).map(v => (
                 <label key={v} className="radio-item">
                   <input type="radio" name="st" checked={val===v} onChange={()=>setVal(v)} />
                   <span>{v}</span>
