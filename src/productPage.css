@@ -262,15 +262,14 @@
 .ing-header{
   display:grid;
   grid-template-columns: 2fr 1fr 1fr .6fr;
-  gap:10px;
+  gap:1px;
   font-weight:700;
   color:#07001b;
   margin:10px 0 6px;
 }
 .ing-row{
-  display:grid;
-  grid-template-columns: 2fr 1fr 1fr .6fr;
-  gap:10px;
+  display:flex;
+flex-direction: column;  gap:5px;
   align-items:center;
   margin-bottom:8px;
 }
@@ -380,3 +379,93 @@
 }
 
 
+.ing-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr .6fr;
+  /* gap: 0.5px; */
+  align-items: center;
+  width: 100%;
+}
+
+.ing-desc {
+  display: flex;
+  flex-direction: column;
+  width: 100%;              /* ✅ ระยะห่างจากบรรทัดบน */
+}
+
+.desc-input {
+  width: 100%;                  /* ✅ กว้างเต็มบล็อก */
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #524449;
+  background: #1a0739;
+  color: #f2eceb;
+  outline: none;
+}
+
+.desc-input:focus {
+  border-color: #8f7a80;
+  box-shadow: 0 0 0 3px rgba(143, 122, 128, 0.25);
+}
+
+
+/* ===== Toast Popup ===== */
+.toast-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #2413b6;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px 22px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+  z-index: 3000;
+  animation: fadeInOut 2s ease forwards;
+}
+
+@keyframes fadeInOut {
+  0%   { opacity: 0; transform: translate(-50%, -60%); }
+  10%  { opacity: 1; transform: translate(-50%, -50%); }
+  90%  { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0; transform: translate(-50%, -40%); }
+}
+
+
+
+/* ===== Confirm Delete Modal ===== */
+.confirm-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  color: #1a023b;
+  padding: 24px 26px;
+  border-radius: 14px;
+  width: min(360px, 90vw);
+  box-shadow: 0 8px 32px rgba(0,0,0,.35);
+  text-align: center;
+  z-index: 4000;
+  animation: fadeIn .18s ease-out;
+}
+
+.confirm-modal h3 {
+  margin: 0;
+  color: #12005e;
+  font-size: 1.1rem;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -46%) scale(.96); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}

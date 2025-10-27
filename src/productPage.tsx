@@ -3,18 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { useProducts } from "./context/ProductContext";
 import "./productPage.css";
 
+
 type IngredientDraft = {
   id: string;
   materialName: string;
   quantity: string;
   unit: string;
+  description: string;
 };
 
 type Recipe = {
   id: string;
   name: string;
   note?: string;
-  ingredients: Array<{ materialName: string; quantity: number; unit: string }>;
+  ingredients: Array<{ materialName: string; quantity: number; unit: string ; description?: string}>;
   createdAt: string;
 };
 
@@ -41,6 +43,10 @@ function findRecipeByNameInsensitive(name: string): Recipe | null {
 export default function ProductPage() {
   const navigate = useNavigate();
   const { products, setProducts } = useProducts();
+  const [showToast, setShowToast] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<any | null>(null);
+const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
+
 
   // ====== Modal ======
   const [_openEdit, _setOpenEdit] = useState(false);
@@ -82,13 +88,14 @@ export default function ProductPage() {
           materialName: ing.materialName,
           quantity: String(ing.quantity),
           unit: ing.unit,
+          description: ing.description || "",
         }))
       );
       setAttachRecipeName(found.name);
     } else {
       setRecipeId(null);
       setRecipeNote("");
-      setRecipeIngredients([{ id: crypto.randomUUID(), materialName: "", quantity: "", unit: "g" }]);
+      setRecipeIngredients([{ id: crypto.randomUUID(), materialName: "", quantity: "", unit: "g" ,description: ""}]);
       setAttachRecipeName("");
     }
 
@@ -115,7 +122,7 @@ export default function ProductPage() {
 
   /** เพิ่ม / ลบ แถววัตถุดิบ */
   function addIngRow() {
-    setRecipeIngredients((prev) => [...prev, { id: crypto.randomUUID(), materialName: "", quantity: "", unit: "g" }]);
+    setRecipeIngredients((prev) => [...prev, { id: crypto.randomUUID(), materialName: "", quantity: "", unit: "g" ,description: ""}]);
   }
   function removeIngRow(id: string) {
     setRecipeIngredients((prev) => prev.filter((r) => r.id !== id));
@@ -181,6 +188,7 @@ export default function ProductPage() {
         materialName: r.materialName.trim(),
         quantity: Number(r.quantity),
         unit: r.unit,
+        description: r.description?.trim() || "-",
       })),
       createdAt: (recipeId && list.find((r) => r.id === recipeId)?.createdAt) || new Date().toISOString(),
     };
@@ -194,14 +202,28 @@ export default function ProductPage() {
 
     saveRecipes(list);
     closeEditModal();
-    alert("บันทึกสินค้าและสูตรเรียบร้อยแล้ว");
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2000);
   }
 
   /** ลบสินค้า */
   function removeItem(it: any) {
-    if (!confirm("ต้องการลบสินค้านี้หรือไม่?")) return;
-    setProducts((prev) => prev.filter((x) => x.id !== it.id));
+    setDeleteTarget(it);
+    setOpenDeleteConfirm(true);
   }
+
+  function confirmDelete() {
+  if (!deleteTarget) return;
+  setProducts((prev) => prev.filter((x) => x.id !== deleteTarget.id));
+  setDeleteTarget(null);
+  setOpenDeleteConfirm(false);
+}
+
+function cancelDelete() {
+  setDeleteTarget(null);
+  setOpenDeleteConfirm(false);
+}
+
 
   return (
     <div className="product-page">
@@ -303,38 +325,65 @@ export default function ProductPage() {
                 <div />
               </div>
 
-              {recipeIngredients.map((ing) => (
-                <div className="ing-row" key={ing.id}>
-                  <input
-                    className="modal-input"
-                    placeholder="ชื่อวัตถุดิบ"
-                    value={ing.materialName}
-                    onChange={(e) => updateIngRow(ing.id, "materialName", e.target.value)}
-                  />
-                  <input
-                    className="modal-input"
-                    placeholder="0"
-                    inputMode="decimal"
-                    value={ing.quantity}
-                    onChange={(e) => updateIngRow(ing.id, "quantity", e.target.value)}
-                  />
-                  <select
-                    className="modal-input"
-                    value={ing.unit}
-                    onChange={(e) => updateIngRow(ing.id, "unit", e.target.value)}
-                  >
-                    {unitOptions.map((u) => (
-                      <option key={u} value={u}>
-                        {u}
-                      </option>
-                    ))}
-                  </select>
-                  <button className="btn ghost" onClick={() => removeIngRow(ing.id)} disabled={recipeIngredients.length === 1}>
-                    ลบ
-                  </button>
-                </div>
-              ))}
+              
 
+                {recipeIngredients.map((ing, idx) => (
+  <div className="ing-row" key={ing.id}>
+    {/* ===== บรรทัดบน ===== */}
+    <div className="ing-top">
+      <input
+        className="modal-input"
+        placeholder="ชื่อวัตถุดิบ"
+        value={ing.materialName}
+        onChange={(e) => updateIngRow(ing.id, "materialName", e.target.value)}
+      />
+      <input
+        className="modal-input"
+        placeholder="0"
+        inputMode="decimal"
+        value={ing.quantity}
+        onChange={(e) => updateIngRow(ing.id, "quantity", e.target.value)}
+      />
+      <select
+        className="modal-input"
+        value={ing.unit}
+        onChange={(e) => updateIngRow(ing.id, "unit", e.target.value)}
+      >
+        {unitOptions.map((u) => (
+          <option key={u} value={u}>
+            {u}
+          </option>
+        ))}
+      </select>
+      <button
+        className="btn ghost"
+        onClick={() => removeIngRow(ing.id)}
+        disabled={recipeIngredients.length === 1}
+      >
+        ลบ
+      </button>
+
+        
+
+
+    </div>
+
+    {/* ===== บรรทัดล่าง ===== */}
+    <div className="ing-desc">
+      <label className="desc-label">คำอธิบาย:</label>
+      <input
+        className="modal-input desc-input"
+        placeholder="คำอธิบาย เช่น เกรด A / ยี่ห้อ X"
+        value={ing.description || ""}
+        onChange={(e) => updateIngRow(ing.id, "description", e.target.value)}
+      />
+    </div>
+  </div>
+))}
+
+
+              
+              
               <div style={{ marginTop: 8 }}>
                 <button className="btn outline" onClick={addIngRow}>
                   + เพิ่มวัตถุดิบ
@@ -353,6 +402,31 @@ export default function ProductPage() {
           </button>
         </div>
       </Modal>
+
+      {/* ✅ Modal ยืนยันการลบ */}
+{openDeleteConfirm && (
+  <>
+    <div className="modal-overlay" />
+    <div className="confirm-modal">
+      <h3>ต้องการลบสินค้านี้หรือไม่?</h3>
+      <p style={{marginTop:"6px", color:"#2b2b66"}}>ชื่อสินค้า: <b>{deleteTarget?.name}</b></p>
+      <div className="confirm-actions">
+        <button className="btn ghost" onClick={cancelDelete}>ยกเลิก</button>
+        <button className="btn danger" onClick={confirmDelete}>ยืนยัน</button>
+      </div>
+    </div>
+  </>
+)}
+
+      {showToast && (
+  <div className="toast-popup">
+    ✅ บันทึกสินค้าและสูตรเรียบร้อยแล้ว
+  </div>
+
+
+        
+)}
+
     </div>
   );
 }

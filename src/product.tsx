@@ -22,7 +22,7 @@ type ReqRow = {
   used: number;
 };
 
-type RatioRow = { id: string; code: string; name: string; ratio: string };
+type RatioRow = { id: string; code: string; name: string; ratio: string;description: string; };
 
 /* ========= Demo data ========= */
 const demo: ProduceOrder = {
@@ -79,6 +79,7 @@ function ModalCard({ children, onClose }: { children: React.ReactNode; onClose: 
 }
 
 /* ========= Modal: สร้างคำสั่งผลิตใหม่ ========= */
+/* ========= Modal: สร้างคำสั่งผลิตใหม่ ========= */
 function CreateOrderModal({
   open,
   products,
@@ -91,11 +92,17 @@ function CreateOrderModal({
   onCreate: (order: ProduceOrder) => void;
 }) {
   const [name, setName] = useState("");
-  const [qty, setQty]   = useState<number | "">("");
-  const [err, setErr]   = useState("");
+  const [qty, setQty] = useState<number | "">("");
+  const [err, setErr] = useState("");
+  const [code, setCode] = useState(""); // ✅ เพิ่ม state สำหรับรหัสสินค้า
 
   useEffect(() => {
-    if (open) { setName(""); setQty(""); setErr(""); }
+    if (open) {
+      setName("");
+      setQty("");
+      setErr("");
+      setCode("");
+    }
   }, [open]);
 
   if (!open) return null;
@@ -103,14 +110,15 @@ function CreateOrderModal({
   const genOrderNo = () => {
     const d = new Date();
     const y = String(d.getFullYear()).slice(-2);
-    const m = String(d.getMonth()+1).padStart(2,"0");
-    const day= String(d.getDate()).padStart(2,"0");
-    const rand = Math.floor(Math.random()*9000+1000);
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const rand = Math.floor(Math.random() * 9000 + 1000);
     return `PO${y}${m}${day}-${rand}`;
   };
+
   const thaiDate = (d = new Date()) => {
     const dd = String(d.getDate()).padStart(2, "0");
-    const mm = String(d.getMonth()+1).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
     const yyyy = d.getFullYear() + 543;
     return `${dd}/${mm}/${yyyy}`;
   };
@@ -121,18 +129,44 @@ function CreateOrderModal({
       <ModalCard onClose={onClose}>
         <div className="lot-card">
           <div className="lot-form">
+
+            {/* ✅ เพิ่มช่องรหัสสินค้า */}
+            <label className="lot-row">
+              <span className="lot-label">รหัสสินค้า</span>
+              <select
+                className="lot-input select-like"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+              >
+                <option value="" disabled>
+                  — เลือกรหัสสินค้า —
+                </option>
+                <option value="P001">P001</option>
+                <option value="P002">P002</option>
+                <option value="P003">P003</option>
+              </select>
+            </label>
+
+            {/* ช่องชื่อสินค้า (ของเดิม) */}
             <label className="lot-row">
               <span className="lot-label">ชื่อสินค้า</span>
               <select
                 className="lot-input select-like"
                 value={name}
-                onChange={e=>setName(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
               >
-                <option value="" disabled>— เลือกชื่อสินค้า —</option>
-                {products.map(p => <option key={p} value={p}>{p}</option>)}
+                <option value="" disabled>
+                  — เลือกชื่อสินค้า —
+                </option>
+                {products.map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
               </select>
             </label>
 
+            {/* ช่องจำนวน (ของเดิม) */}
             <label className="lot-row">
               <span className="lot-label">จำนวน</span>
               <input
@@ -141,7 +175,9 @@ function CreateOrderModal({
                 min={1}
                 placeholder="0"
                 value={qty}
-                onChange={e=>setQty(e.target.value==="" ? "" : Number(e.target.value))}
+                onChange={(e) =>
+                  setQty(e.target.value === "" ? "" : Number(e.target.value))
+                }
               />
             </label>
           </div>
@@ -151,9 +187,9 @@ function CreateOrderModal({
           <div className="lot-actions">
             <button
               className="btn primary"
-              onClick={()=>{
-                if (!name || qty==="" || Number(qty)<=0) {
-                  setErr("กรุณาเลือกชื่อสินค้าและกรอกจำนวน (> 0)");
+              onClick={() => {
+                if (!name || !code || qty === "" || Number(qty) <= 0) {
+                  setErr("กรุณาเลือกรหัสสินค้า ชื่อสินค้า และกรอกจำนวน (> 0)");
                   return;
                 }
                 const now = new Date();
@@ -177,6 +213,7 @@ function CreateOrderModal({
     </>
   );
 }
+
 
 /* ========= Modal #1: อัปเดตสถานะ ========= */
 type StatusOpt = "กำลังผลิต" | "เสร็จสิ้น" | "เสร็จสิ้นบางส่วนหรือยังไม่เสร็จ" | "ยกเลิก";
@@ -407,22 +444,56 @@ function RequestMaterialModal({ open, onClose }: { open: boolean; onClose: () =>
 
 /* ========= Modal #5: สัดส่วนวัตถุดิบ ========= */
 function IngredientRatioModal({
-  open, product, onClose
+  open,
+  product,
+  onClose,
 }: {
   open: boolean;
   product: ProduceOrder;
   onClose: () => void;
 }) {
-  const [rows] = useState<RatioRow[]>([
-    { id: crypto.randomUUID(), code: "", name: "", ratio: "" },
-  ]);
+  const [rows, setRows] = useState<RatioRow[]>([]);
+
+  // ✅ โหลดสูตรจาก localStorage พร้อมคำอธิบายที่เคยกรอกไว้
+  useEffect(() => {
+    if (open) {
+      try {
+        const raw = localStorage.getItem("recipes");
+        if (!raw) return;
+        const list = JSON.parse(raw);
+
+        // หาสูตรตามชื่อสินค้า (แบบชื่อคล้ายก็ได้)
+        const recipe = list.find(
+          (r: any) =>
+            r.name.trim().toLowerCase() === product.productName.trim().toLowerCase()
+        );
+
+        if (recipe && recipe.ingredients) {
+          const data = recipe.ingredients.map((ing: any, i: number) => ({
+            id: crypto.randomUUID(),
+            code: `M${String(i + 1).padStart(3, "0")}`,
+            name: ing.materialName,
+            ratio: String(ing.quantity),
+            description: ing.description || "",
+          }));
+          setRows(data);
+        } else {
+          setRows([]);
+        }
+      } catch (e) {
+        console.error("โหลดสูตรไม่สำเร็จ", e);
+      }
+    }
+  }, [open, product.productName]);
 
   if (!open) return null;
 
-  const preview = rows.map(r => ({
+  // คำนวณจำนวนที่จะใช้ (สัดส่วน)
+  const preview = rows.map((r) => ({
     code: r.code.trim(),
     name: r.name.trim(),
     qty: Math.round(((Number(r.ratio) || 0) * product.qty) / 100),
+    description: r.description,
   }));
 
   return (
@@ -431,31 +502,58 @@ function IngredientRatioModal({
       <ModalCard onClose={onClose}>
         <div className="ratio-card">
           <div className="ratio-header">
-            <div className="rh-row"><span className="rh-k">รหัสสินค้า:</span><span className="rh-v">{product.orderNo}</span></div>
-            <div className="rh-row"><span className="rh-k">ชื่อสินค้า:</span><span className="rh-v">{product.productName}</span></div>
-            <div className="rh-row"><span className="rh-k">จำนวนผลิต:</span><span className="rh-v">{product.qty}</span></div>
+            <div className="rh-row">
+              <span className="rh-k">รหัสสินค้า:</span>
+              <span className="rh-v">{product.orderNo}</span>
+            </div>
+            <div className="rh-row">
+              <span className="rh-k">ชื่อสินค้า:</span>
+              <span className="rh-v">{product.productName}</span>
+            </div>
+            <div className="rh-row">
+              <span className="rh-k">จำนวนผลิต:</span>
+              <span className="rh-v">{product.qty}</span>
+            </div>
           </div>
 
           <div className="m-head-flex">
             <h3 className="m-title">สัดส่วนวัตถุดิบ</h3>
           </div>
 
-          <div className="ratio-preview">
-            {preview.map((p, i) => (
-              <div key={i} className="ratio-item-card">
-                <div className="ric-left">
-                  <div className="ric-code">รหัสวัตถุดิบ</div>
-                  <div className="ric-code-val">{rows[i].code || "-"}</div>
-                  <div className="ric-name">ชื่อวัตถุดิบ</div>
-                  <div className="ric-name-val">{rows[i].name || "-"}</div>
+          {preview.length === 0 ? (
+            <div style={{ textAlign: "center", padding: "16px", color: "#777" }}>
+              ❗ ไม่พบสูตรสำหรับสินค้านี้
+            </div>
+          ) : (
+            <div className="ratio-preview">
+              {preview.map((p, i) => (
+                <div key={i} className="ratio-item-card">
+                  <div className="ric-left">
+                    <div className="ric-code">รหัสวัตถุดิบ</div>
+                    <div className="ric-code-val">{p.code || "-"}</div>
+
+                    <div className="ric-name">ชื่อวัตถุดิบ</div>
+                    <div className="ric-name-val">{p.name || "-"}</div>
+
+                    {/* ✅ กล่องคำอธิบายของวัตถุดิบแต่ละอัน */}
+                    <div className="ric-desc">คำอธิบาย</div>
+                    <input
+                      className="ric-desc-input"
+                      type="text"
+                      value={p.description || ""}
+                      readOnly
+                      placeholder="(ไม่มีคำอธิบาย)"
+                    />
+                  </div>
+
+                  <div className="ric-right">
+                    <div className="ric-qty-label">จำนวน</div>
+                    <div className="ric-qty-val">{p.qty}</div>
+                  </div>
                 </div>
-                <div className="ric-right">
-                  <div className="ric-qty-label">จำนวน</div>
-                  <div className="ric-qty-val">{p.qty}</div>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </ModalCard>
     </>

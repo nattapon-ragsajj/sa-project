@@ -21,12 +21,14 @@ type Ingredient = {
   materialName: string;
   quantity: string; // เก็บเป็น string เพื่อรองรับ input ตรง ๆ แล้วค่อย validate เป็นตัวเลข
   unit: string;
+  description: string; // ✅ เพิ่มช่องอธิบายต่อวัตถุดิบ
 };
 
 type Recipe = {
   id: string;
   name: string;
   note?: string;
+  productUnit: string;
   ingredients: Array<{
     materialName: string;
     quantity: number;
@@ -35,11 +37,23 @@ type Recipe = {
   createdAt: string;
 };
 
+
+// เพิ่มก่อนฟังก์ชัน return
+const warehouseMaterials = [
+  "น้ำตาลทรายขาว",
+  "แป้งสาลี",
+  "เนยจืด",
+  "ไข่ไก่",
+  "นมสด",
+];
+
 export default function BuildProduct() {
   const [recipeName, setRecipeName] = useState("");
+  const [productUnit, setProductUnit] = useState("");
+
   const [note, setNote] = useState("");
   const [ingredients, setIngredients] = useState<Ingredient[]>([
-    { id: crypto.randomUUID(), materialName: "", quantity: "", unit: "g" },
+    { id: crypto.randomUUID(), materialName: "", quantity: "", unit: "g",description: "" },
   ]);
 
   const [errors, setErrors] = useState<string[]>([]);
@@ -53,7 +67,7 @@ export default function BuildProduct() {
   function addRow() {
     setIngredients((prev) => [
       ...prev,
-      { id: crypto.randomUUID(), materialName: "", quantity: "", unit: "g" },
+      { id: crypto.randomUUID(), materialName: "", quantity: "", unit: "g", description: ""},
     ]);
   }
 
@@ -165,7 +179,7 @@ setProducts((prev) => {
     id: Date.now(),
     code: `P${String(prev.length + 1).padStart(3, "0")}`,
     name: recipeName.trim(),
-    unit: "ชิ้น",
+    unit: productUnit.trim(),
     desc: note.trim() || "",
     group: "สินค้าใหม่",
     status: "พร้อมผลิต",
@@ -184,8 +198,9 @@ setProducts((prev) => {
         materialName: r.materialName.trim(),
         quantity: Number(r.quantity),
         unit: r.unit,
-      })),
+        description: r.description?.trim() || "-",      })),
       createdAt: new Date().toISOString(),
+      productUnit: productUnit.trim(),
       
     };
 
@@ -196,9 +211,10 @@ setProducts((prev) => {
 
       // เคลียร์ฟอร์ม
       setRecipeName("");
+      setProductUnit("");
       setNote("");
       setIngredients([
-        { id: crypto.randomUUID(), materialName: "", quantity: "", unit: "g" },
+        { id: crypto.randomUUID(), materialName: "", quantity: "", unit: "g" ,description: ""},
       ]);
       setErrors([]);
       setFieldErrors({});
@@ -248,6 +264,19 @@ setProducts((prev) => {
           {fieldErrors["recipeName"] && (
             <div className="field-error">{fieldErrors["recipeName"]}</div>
           )}
+
+          {/* ✅ ช่องหน่วยของสินค้า */}
+<label className="label" htmlFor="productUnit" style={{ marginTop: 10 }}>
+  หน่วยของสินค้า <span className="req">*</span>
+</label>
+<input
+  id="productUnit"
+  className="input"
+  placeholder="เช่น ขวด / กล่อง / ชิ้น"
+  value={productUnit}
+  onChange={(e) => setProductUnit(e.target.value)}
+/>
+
         </div>
 
         <div className="section">
@@ -265,70 +294,111 @@ setProducts((prev) => {
           </div>
 
           {ingredients.map((row, idx) => {
-            const nameKey = `ingredients.${idx}.materialName`;
-            const qtyKey = `ingredients.${idx}.quantity`;
-            const unitKey = `ingredients.${idx}.unit`;
-            return (
-              <div className="row" key={row.id}>
-                <div className="col col-name">
-                  <input
-                    className={`input ${fieldErrors[nameKey] ? "is-invalid" : ""}`}
-                    placeholder="ชื่อวัตถุดิบ เช่น ผงชาเขียว"
-                    value={row.materialName}
-                    onChange={(e) =>
-                      updateRow(row.id, "materialName", e.target.value)
-                    }
-                  />
-                  {fieldErrors[nameKey] && (
-                    <div className="field-error">{fieldErrors[nameKey]}</div>
-                  )}
-                </div>
-                <div className="col col-qty">
-                  <input
-                    className={`input ${fieldErrors[qtyKey] ? "is-invalid" : ""}`}
-                    placeholder="0"
-                    inputMode="decimal"
-                    value={row.quantity}
-                    onChange={(e) => updateRow(row.id, "quantity", e.target.value)}
-                  />
-                  {fieldErrors[qtyKey] && (
-                    <div className="field-error">{fieldErrors[qtyKey]}</div>
-                  )}
-                </div>
-                <div className="col col-unit">
-                  <select
-                    className={`select ${fieldErrors[unitKey] ? "is-invalid" : ""}`}
-                    value={row.unit}
-                    onChange={(e) => updateRow(row.id, "unit", e.target.value)}
-                  >
-                    {unitOptions.map((u) => (
-                      <option key={u} value={u}>
-                        {u}
-                      </option>
-                    ))}
-                  </select>
-                  {fieldErrors[unitKey] && (
-                    <div className="field-error">{fieldErrors[unitKey]}</div>
-                  )}
-                </div>
-                <div className="col col-action">
-                  <button
-                    type="button"
-                    className="btn ghost"
-                    onClick={() => removeRow(row.id)}
-                    disabled={ingredients.length === 1}
-                    title={
-                      ingredients.length === 1
-                        ? "ต้องมีอย่างน้อย 1 แถว"
-                        : "ลบแถวนี้"
-                    }
-                  >
-                    ลบ
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+  const nameKey = `ingredients.${idx}.materialName`;
+  const qtyKey = `ingredients.${idx}.quantity`;
+  const unitKey = `ingredients.${idx}.unit`;
+  const descKey = `ingredients.${idx}.description`;
+
+  return (
+    <div className="row" key={row.id}>
+      
+      <div className="col col-name">
+        <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+          {/* 🔹 ปุ่ม V = dropdown เลือกจากคลัง */}
+          <select
+            className="select"
+            style={{ width: "150px", flexShrink: 0 }}
+            value={warehouseMaterials.includes(row.materialName) ? row.materialName : ""}
+            onChange={(e) => {
+              const val = e.target.value;
+              if (val) {
+                updateRow(row.id, "materialName", val);
+              }
+            }}
+          >
+            <option value="">วัตถุดิบ</option>
+            {warehouseMaterials.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+
+          {/* 🔹 ช่องพิมพ์ชื่อเอง (กรอกเองได้เสมอ) */}
+          <input
+            className={`input ${fieldErrors[nameKey] ? "is-invalid" : ""}`}
+            placeholder="ชื่อวัตถุดิบ เช่น ผงชาเขียว"
+            value={row.materialName}
+            onChange={(e) => updateRow(row.id, "materialName", e.target.value)}
+          />
+        </div>
+
+        {fieldErrors[nameKey] && (
+          <div className="field-error">{fieldErrors[nameKey]}</div>
+        )}
+      </div>
+
+      <div className="col col-qty">
+        <input
+          className={`input ${fieldErrors[qtyKey] ? "is-invalid" : ""}`}
+          placeholder="0"
+          inputMode="decimal"
+          value={row.quantity}
+          onChange={(e) => updateRow(row.id, "quantity", e.target.value)}
+        />
+        {fieldErrors[qtyKey] && (
+          <div className="field-error">{fieldErrors[qtyKey]}</div>
+        )}
+      </div>
+
+      <div className="col col-unit">
+        <select
+          className={`select ${fieldErrors[unitKey] ? "is-invalid" : ""}`}
+          value={row.unit}
+          onChange={(e) => updateRow(row.id, "unit", e.target.value)}
+        >
+          {unitOptions.map((u) => (
+            <option key={u} value={u}>
+              {u}
+            </option>
+          ))}
+        </select>
+        {fieldErrors[unitKey] && (
+          <div className="field-error">{fieldErrors[unitKey]}</div>
+        )}
+      </div>
+
+
+      
+
+      <div className="col col-action">
+        <button
+          type="button"
+          className="btn ghost"
+          onClick={() => removeRow(row.id)}
+          disabled={ingredients.length === 1}
+          title={
+            ingredients.length === 1
+              ? "ต้องมีอย่างน้อย 1 แถว"
+              : "ลบแถวนี้"
+          }
+        >
+          ลบ
+        </button>
+      </div>
+
+      <div className="col col-desc">
+        <input
+          className="input"
+          placeholder="คำอธิบาย เช่น เกรด A / ยี่ห้อ X"
+          value={row.description}
+          onChange={(e) => updateRow(row.id, "description", e.target.value)}
+        />
+      </div>
+    </div>
+  );
+})}
+
         
           <div className="row">
             <div className="col col-add">

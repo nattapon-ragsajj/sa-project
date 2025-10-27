@@ -727,3 +727,26 @@
 
 
 
+/* ===== คำอธิบายวัตถุดิบ (ในโมดัลสัดส่วน) ===== */
+.ric-desc {
+  color: #666;
+  font-size: 13px;
+  margin-top: 4px;
+}
+.ric-desc-val {
+  font-weight: 600;
+  color: #1b1440;
+  margin-bottom: 6px;
+}
+
+
+.ric-desc-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: #fff;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
