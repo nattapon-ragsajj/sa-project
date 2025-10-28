@@ -35,6 +35,9 @@ export default function ProductionLayout() {
           <NavLink to="/production/build-product" className="nav-link">
             สร้างสูตร
           </NavLink>
+          <NavLink to="/production/product-mat" className="nav-link">
+            วัตถุดิบที่ใช้ในการประกอบสินค้า
+          </NavLink>
         </nav>
 
         {/* 🔹 ปุ่ม Logout */}

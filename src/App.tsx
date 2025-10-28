@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./loginPage";
+import RegisterPage from "./registerPage"; 
 
 import ProductionLayout from "./layout/ProductionLayout";
 import WarehouseLayout from "./layout/WarehouseLayout";
@@ -10,6 +11,7 @@ import ProductPage from "./productPage";
 import BuildProduct from "./buildProduct";
 import MaterialSelect from "./materialSelect";
 import Product from "./product";
+import ProductMat from "./productMat";
 
 // หน้าย่อย ฝ่ายคลัง
 import RawMaterial from "./rawMaterial";
@@ -38,6 +40,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/register" element={<RegisterPage />} />
 
           {/* ฝ่ายผลิต */}
           <Route path="/production" element={<ProductionLayout />}>
@@ -45,6 +48,8 @@ function App() {
             <Route path="product" element={<Product />} />
             <Route path="build-product" element={<BuildProduct />} />
             <Route path="material-select" element={<MaterialSelect />} />
+            <Route path="product-mat" element={<ProductMat />} />
+
           </Route>
 
           {/* ฝ่ายคลัง */}
